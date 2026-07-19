@@ -1,7 +1,7 @@
 
 const API={
- async videos(){
-  const r=await fetch('/data/videos.json');
+ async getContent(){
+  const r=await fetch('/data/content.json');
   return await r.json();
  }
 }
