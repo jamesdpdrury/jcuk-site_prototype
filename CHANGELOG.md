@@ -1,8 +1,11 @@
-# v0.4.0
+# v0.5.0
 
-## New
-- Reusable VideoCard component
-- Thumbnail fallback handling
-- Homepage thumbnail fix
-- Improved card layout
-- Shared image helper
+## Added
+- Premium hero styling
+- Responsive featured image
+- Shared Header component
+- Footer component
+- Better spacing and layout
+
+## Fixed
+- Featured thumbnail overflowing page
