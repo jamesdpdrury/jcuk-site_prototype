@@ -1,12 +1,8 @@
-# v0.2.0
+# v0.2.1
 
 ## Added
-- New homepage layout
-- Featured video section
-- Category cards
-- Footer
-- Modular CSS files
-- content.json schema example
-
-## Updated
-- API renamed to getContent()
+- Premium header
+- Mobile navigation
+- Redesigned video cards
+- Search box
+- Category filtering UI
