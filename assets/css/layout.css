@@ -1,0 +1,5 @@
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text);}
+.container{max-width:var(--max-width);margin:auto;padding:32px;}
+.hero,.section,.card{background:var(--card);border-radius:var(--radius);padding:24px;margin-bottom:28px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;}
+footer{text-align:center;padding:40px;color:#666;}

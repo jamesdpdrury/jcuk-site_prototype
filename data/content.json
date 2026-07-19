@@ -1,23 +1,75 @@
 [
   {
+    "id": 1,
+    "contentType": "video",
     "title": "Our Virgin Voyages Holiday Begins! ✈️ Barcelona, Sagrada Família & a RockStar Upgrade! ⭐",
     "slug": "vv-june2026-part1",
     "youtubeId": "RtDkrroG3Ao",
-    "ship": "Valiant Lady",
-    "published": "2026-07-05"
-  }, 
-  {
-    "title": "Our PERFECT Sea Day on Virgin Voyages!",
-    "slug": "vv-june2026-part2",
-    "youtubeId": "zcHiq5PJ0Ak",
-    "ship": "Valiant Lady",
-    "published": "2026-07-12"
+    "published": "2026-07-05",
+    "featured": false,
+    "summary": "The first part of our Virgin Voyages holiday adventure! In this video, we explore the beautiful city of Barcelona, visit the iconic Sagrada Família, and enjoy a RockStar upgrade on our cruise. Join us as we embark on an unforgettable journey filled with excitement and luxury.",
+    "thumbnail": "",
+    "type": ["Cruise", "City Break"],
+    "category": "Ship Tour",
+    "brand": "Virgin Voyages",
+    "series": "Valiant Lady",
+    "location": [
+      "Barcelona",
+      "Spain"
+    ],
+    "tags": [
+      "Virgin Voyages",
+      "Barcelona"
+    ]
   },
-   {
+  {
+    "id": 2,
+    "contentType": "video",
+    "title": "Our PERFECT Sea Day on Virgin Voyages!",
+    "slug": "vv-june2026-part2 ",
+    "youtubeId": "zcHiq5PJ0Ak",
+    "published": "2026-07-12",
+    "featured": false,
+    "summary": "The second part of our Virgin Voyages holiday adventure! In this video, we enjoy a perfect day at sea, exploring the amenities and activities on our cruise. Join us as we relax and have a wonderful time on the Valiant Lady.",
+    "thumbnail": "",
+    "type": "Cruise",
+    "category": "Day at Sea",
+    "brand": "Virgin Voyages",
+    "series": "Valiant Lady",
+    "location": [
+      "Day at Sea",
+      "Mediterranean"
+    ],
+    "tags": [
+      "Virgin Voyages",
+      "Day at Sea",
+      "Mediterranean"
+    ]
+  },
+  {
+    "id": 3,
+    "contentType": "video",
     "title": "Rockstar Perks & The BEST Food Onboard?",
-    "slug": "vv-june2026-part3",
+    "slug": "vv-june2026-part3 ",
     "youtubeId": "TyDHGFuyU3Q",
-    "ship": "Valiant Lady",
-    "published": "2026-07-19"
+    "published": "2026-07-19",
+    "featured": true,
+    "summary": "The third part of our Virgin Voyages holiday adventure! In this video, we explore the amazing amenities and delicious food available on our cruise. Join us as we indulge in the ultimate onboard experience on the Valiant Lady.",
+    "thumbnail": "",
+    "type": "Cruise",
+    "category": "Day at Sea",
+    "brand": "Virgin Voyages",
+    "series": "Valiant Lady",
+    "location": [
+      "Rome",
+      "Civitàvecchia",
+      "Mediterranean"
+    ],
+    "tags": [
+      "Virgin Voyages",
+      "Rome",
+      "Citàvecchia",
+      "Mediterranean"
+    ]
   }
 ]

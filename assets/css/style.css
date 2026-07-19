@@ -1,11 +1,17 @@
 
-body{margin:0;font-family:Arial,sans-serif;background:#f7f7f7;color:#222}
-.header{background:#fff;border-bottom:1px solid #ddd}
-.wrap{max-width:1100px;margin:auto;padding:20px;display:flex;justify-content:space-between;align-items:center}
-nav a{margin-left:20px;text-decoration:none;color:#f97316;font-weight:bold}
-#app{max-width:1100px;margin:40px auto;padding:0 20px}
-.hero,.card{background:#fff;border-radius:16px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
-.thumb{width:100%;border-radius:10px}
-.button{display:inline-block;background:#f97316;color:#fff;padding:12px 18px;border-radius:10px;text-decoration:none}
-input{width:100%;padding:12px;margin-bottom:20px}
+:root{--brand:#ff7a00;--bg:#f6f7fb;--card:#fff;--text:#222;--muted:#666;--radius:18px}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--text)}
+.container{max-width:1180px;margin:auto;padding:0 24px}
+.site-header,.site-footer{background:#fff}
+.site-header{border-bottom:1px solid #eee}
+.site-header .container{display:flex;justify-content:space-between;align-items:center;padding:20px 24px}
+.logo{font-size:1.4rem;font-weight:700}
+nav a{margin-left:20px;text-decoration:none;color:#444}
+.hero,.card,.browse{background:#fff;border-radius:var(--radius);padding:24px;box-shadow:0 8px 24px rgba(0,0,0,.06);margin:24px 0}
+.hero img,.thumb{width:100%;border-radius:12px}
+.button{display:inline-block;background:var(--brand);color:#fff;padding:12px 18px;border-radius:12px;text-decoration:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px}
+input{width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;margin-bottom:20px}
+.category-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.category{padding:18px;background:#fafafa;border-radius:14px;text-align:center;font-weight:600}
+@media(max-width:800px){.category-grid{grid-template-columns:repeat(2,1fr)}}
