@@ -1,7 +1,7 @@
 
 const VideosView={
  async render(){
-  const vids=await API.videos();
+  const vids=await API.getContent();
   app.innerHTML='<input id=s placeholder="Search videos"><div id=g class="grid"></div>';
   const g=document.getElementById('g');
   function draw(f=''){

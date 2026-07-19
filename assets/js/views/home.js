@@ -1,7 +1,7 @@
 
 const HomeView={
  async render(){
-  const vids=await API.videos();
+  const vids=await API.getContent();
   vids.sort((a,b)=>new Date(b.published)-new Date(a.published));
   const v=vids[0];
   app.innerHTML=`<section class="hero">
