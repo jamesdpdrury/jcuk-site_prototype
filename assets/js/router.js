@@ -9,14 +9,15 @@ const Router={
    history.pushState({},'',a.getAttribute('href'));
    Router.render();
   });
-  window.addEventListener('popstate',Router.render);
+  window.onpopstate=()=>Router.render();
   Router.render();
  },
  render(){
   const p=location.pathname;
   if(p==='/'||p==='/watch') return HomeView.render();
   if(p==='/videos') return VideosView.render();
-  if(p.startsWith('/v/')) return DeepLinkView.render(p.substring(3));
-  app.innerHTML='<h1>404</h1>';
+  if(p.startsWith('/v/')) return DeepLinkView.render(p.slice(3));
+  if(p.startsWith('/video/')) return DeepLinkView.render(p.slice(7));
+  app.innerHTML="<div class='container'><h1>404</h1></div>";
  }
-}
+};

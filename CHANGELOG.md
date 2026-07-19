@@ -1,8 +1,9 @@
-# v0.2.1
+# v0.3.1
 
-## Added
-- Premium header
-- Mobile navigation
-- Redesigned video cards
-- Search box
-- Category filtering UI
+Bug-fix release.
+
+- Home page search now works
+- Home page category filters now work
+- Supports multiple content types
+- Auto-generates category chips
+- Shared rendering helper
