@@ -1,9 +1,8 @@
-# v0.3.1
+# v0.4.0
 
-Bug-fix release.
-
-- Home page search now works
-- Home page category filters now work
-- Supports multiple content types
-- Auto-generates category chips
-- Shared rendering helper
+## New
+- Reusable VideoCard component
+- Thumbnail fallback handling
+- Homepage thumbnail fix
+- Improved card layout
+- Shared image helper

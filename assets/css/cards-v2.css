@@ -1,0 +1,6 @@
+
+.card{overflow:hidden;padding:0}
+.card img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#ececec}
+.card-body{padding:16px}
+.card h3{margin:.4rem 0}
+.card p{color:#666;font-size:.95rem}
