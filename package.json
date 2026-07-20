@@ -1,0 +1,7 @@
+{
+  "name": "jcuk-site",
+  "version": "1.0.0",
+  "description": "James & Chris UK travel site with Netlify Functions",
+  "main": "index.html",
+  "private": true
+}
