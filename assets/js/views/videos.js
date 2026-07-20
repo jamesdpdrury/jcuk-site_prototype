@@ -2,8 +2,12 @@
 const VideosView={
  async render(){
  const items=await API.getContent();
+ const settings=await API.getSettings();
+ VideoCard.logoMap=settings.logos||{};
+ 
  app.innerHTML=`
- <div class="container">
+ ${Header()}
+ <main class="container">
  <h1>Browse Videos</h1>
  <div class="searchbar"><input id="q" placeholder="Search..."></div>
  <div class="filters">
@@ -13,18 +17,13 @@ const VideosView={
   <span class="chip" data-cat="City Break">City Breaks</span>
  </div>
  <div id="results" class="grid"></div>
- </div>`;
+ </main>`;
  let current="All";
  const out=document.getElementById("results");
  const draw=()=>{
    const list=Search.filter(items,document.getElementById("q").value,current);
-   out.innerHTML=list.map(v=>`
-   <div class="card">
-    <img src="https://i.ytimg.com/vi/${v.youtubeId}/mqdefault.jpg">
-    <h3>${v.title}</h3>
-    <p>${v.brand||''}</p>
-    <a class="btn" href="/v/${v.slug}" data-link>Watch</a>
-   </div>`).join("") || "<p>No matching content.</p>";
+   out.innerHTML=list.map(v=>VideoCard.render(v)).join("") || "<p>No matching content.</p>";
+   VideoCard.hydrateStats();
  };
  draw();
  document.getElementById("q").oninput=draw;

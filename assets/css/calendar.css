@@ -1,0 +1,153 @@
+.calendar-section {
+  margin: 2rem 0;
+}
+
+.calendar-section h1 {
+  margin-bottom: 0.5rem;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.calendar-section > p {
+  margin-bottom: 2rem;
+  color: var(--text);
+  opacity: 0.8;
+}
+
+.calendar-container {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.calendar-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.calendar-month {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+}
+
+.calendar-day-header {
+  text-align: center;
+  font-weight: 700;
+  padding: 0.75rem 0;
+  color: var(--primary);
+  border-bottom: 2px solid var(--primary);
+}
+
+.calendar-empty {
+  background: transparent;
+}
+
+.calendar-day {
+  position: relative;
+  background: var(--bg);
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 0.5rem;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.calendar-day-number {
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: var(--text);
+}
+
+.calendar-day-videos {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+  overflow-y: auto;
+  max-height: 70px;
+}
+
+.calendar-video-item {
+  position: relative;
+  cursor: pointer;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.calendar-video-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.2s;
+}
+
+.calendar-video-item:hover .calendar-video-thumb {
+  opacity: 0.7;
+}
+
+.calendar-video-popup {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #000;
+  color: #fff;
+  padding: 0.75rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  margin-bottom: 0.5rem;
+  max-width: 250px;
+  white-space: normal;
+}
+
+.calendar-video-item:hover .calendar-video-popup {
+  opacity: 1;
+}
+
+.calendar-video-popup h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.calendar-video-popup p {
+  margin: 0;
+  font-size: 0.75rem;
+  opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+  .calendar-grid {
+    gap: 0.25rem;
+  }
+
+  .calendar-day {
+    min-height: 80px;
+    padding: 0.375rem;
+  }
+
+  .calendar-day-videos {
+    max-height: 60px;
+  }
+
+  .calendar-video-item {
+    height: 40px;
+  }
+}

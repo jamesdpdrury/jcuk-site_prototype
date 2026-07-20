@@ -1,5 +1,8 @@
 
-const Footer=()=>`
+const Footer=()=>{
+  const year=new Date().getFullYear();
+  return `
 <footer>
-  <p>© James & Chris UK</p>
+  <p>© ${year} James & Chris UK</p>
 </footer>`;
+};

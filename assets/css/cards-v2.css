@@ -1,6 +1,10 @@
 
-.card{overflow:hidden;padding:0}
-.card img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#ececec}
+.card{overflow:hidden;padding:10px}
+.card img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;}
 .card-body{padding:16px}
-.card h3{margin:.4rem 0}
-.card p{color:#666;font-size:.95rem}
+.card-title{margin:.4rem 0;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis;line-clamp:2;-webkit-line-clamp:2}
+.card-description{color:#666;font-size:.95rem;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis;line-clamp:6;-webkit-line-clamp:6;line-height:1.5;margin:0 0 1rem}
+.card-logos{display:flex;gap:.5rem;margin:.5rem 0 1rem;align-items:center;flex-wrap:wrap}
+.card-logos img{width:50px;height:50px;flex-shrink:0;object-fit:contain;border-radius:4px}
+.card-stats{display:flex;flex-wrap:wrap;gap:.35rem;margin:.5rem 0 1rem}
+.stat-pill{display:inline-flex;align-items:center;gap:.25rem;padding:.25rem .5rem;border-radius:999px;background:#f3f4f6;color:#444;font-size:.8rem;font-weight:600}

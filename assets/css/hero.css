@@ -3,6 +3,12 @@
   display:flex;
   flex-direction:column;
   gap:1.5rem;
+  margin-bottom:3rem;
+}
+.hero-container{
+  position:relative;
+  display:inline-block;
+  width:100%;
 }
 .hero-image{
   width:100%;
@@ -14,12 +20,34 @@
   overflow:hidden;
   box-shadow:0 12px 30px rgba(0,0,0,.12);
 }
+.featured-sticker{
+  position:absolute;
+  top:1rem;
+  right:1rem;
+  background-color:var(--primary);
+  color:#fff;
+  padding:0.5rem 1rem;
+  border-radius:8px;
+  font-weight:700;
+  font-size:0.875rem;
+  letter-spacing:0.5px;
+  text-transform: uppercase;
+}
 .hero h1,.hero h2{
   margin:0;
+}
+.playlist-section{
+  margin-bottom:3rem;
+}
+.playlist-title{
+  font-size:1.75rem;
+  font-weight:700;
+  margin:0 0 1.5rem 0;
+  color:var(--text);
 }
 @media (min-width:1200px){
   .hero{
     max-width:1000px;
-    margin:0 auto;
+    margin:0 auto 3rem;
   }
 }
