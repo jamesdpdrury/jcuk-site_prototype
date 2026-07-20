@@ -1,4 +1,11 @@
 const API={
+ _getApiBase(){
+   // Use Netlify Functions on production, local API on localhost
+   if(window.location.hostname==='localhost'||window.location.hostname==='127.0.0.1'){
+     return '/api';
+   }
+   return '/.netlify/functions';
+ },
  async getContent(){
    const r=await fetch('/data/content.json');
    const items=await r.json();
@@ -12,7 +19,8 @@ const API={
  },
  async getSettings(){
    try{
-     const r=await fetch('/api/settings');
+     const base=this._getApiBase();
+     const r=await fetch(`${base}/settings`);
      return await r.json();
    }catch(e){
      return {};
@@ -20,7 +28,8 @@ const API={
  },
  async getYoutubeChannel(){
    try{
-     const r=await fetch('/api/youtube-channel');
+     const base=this._getApiBase();
+     const r=await fetch(`${base}/youtube-channel`);
      return await r.json();
    }catch(e){
      return {};
