@@ -24,12 +24,20 @@ exports.handler = async (event, context) => {
   try {
     // Read settings to get API credentials
     const settingsPath = path.join(__dirname, '../../data/settings.json');
-    const settingsContent = fs.readFileSync(settingsPath, 'utf-8');
-    const settings = JSON.parse(settingsContent);
+    let settings = {};
     
-    const { youtubeApiKey, youtubeChannelId } = settings;
+    try {
+      const settingsContent = fs.readFileSync(settingsPath, 'utf-8');
+      settings = JSON.parse(settingsContent);
+    } catch (e) {
+      console.warn('Could not read settings.json from filesystem:', e);
+    }
+    
+    const youtubeApiKey = settings.youtubeApiKey;
+    const youtubeChannelId = settings.youtubeChannelId;
     
     if (!youtubeApiKey || !youtubeChannelId) {
+      console.error('Missing YouTube credentials:', { youtubeApiKey: !!youtubeApiKey, youtubeChannelId: !!youtubeChannelId });
       return {
         statusCode: 400,
         headers: { 'Access-Control-Allow-Origin': '*' },
@@ -40,6 +48,15 @@ exports.handler = async (event, context) => {
     // Fetch channel information from YouTube API
     const url = `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${youtubeChannelId}&key=${youtubeApiKey}`;
     const response = await fetchFromYouTube(url);
+    
+    if (response.error) {
+      console.error('YouTube API error:', response.error);
+      return {
+        statusCode: 400,
+        headers: { 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify({ error: 'YouTube API error: ' + (response.error.message || JSON.stringify(response.error)) })
+      };
+    }
     
     if (!response.items || response.items.length === 0) {
       return {
@@ -67,7 +84,7 @@ exports.handler = async (event, context) => {
     return {
       statusCode: 500,
       headers: { 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ error: 'Failed to fetch YouTube data' })
+      body: JSON.stringify({ error: 'Failed to fetch YouTube data: ' + error.message })
     };
   }
 };
