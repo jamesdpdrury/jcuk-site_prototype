@@ -1,6 +1,4 @@
 const https = require('https');
-const fs = require('fs');
-const path = require('path');
 
 function fetchFromYouTube(url) {
   return new Promise((resolve, reject) => {
@@ -22,19 +20,9 @@ function fetchFromYouTube(url) {
 
 exports.handler = async (event, context) => {
   try {
-    // Read settings to get API credentials
-    const settingsPath = path.join(__dirname, '../../data/settings.json');
-    let settings = {};
-    
-    try {
-      const settingsContent = fs.readFileSync(settingsPath, 'utf-8');
-      settings = JSON.parse(settingsContent);
-    } catch (e) {
-      console.warn('Could not read settings.json from filesystem:', e);
-    }
-    
-    const youtubeApiKey = settings.youtubeApiKey;
-    const youtubeChannelId = settings.youtubeChannelId;
+    // Get API credentials from environment variables
+    const youtubeApiKey = process.env.YOUTUBE_API_KEY;
+    const youtubeChannelId = process.env.YOUTUBE_CHANNEL_ID;
     
     if (!youtubeApiKey || !youtubeChannelId) {
       console.error('Missing YouTube credentials:', { youtubeApiKey: !!youtubeApiKey, youtubeChannelId: !!youtubeChannelId });
