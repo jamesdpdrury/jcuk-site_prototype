@@ -64,7 +64,8 @@ const VideoCard={
     .filter(Boolean))];
   if(!ids.length) return;
   try{
-   const response=await fetch(`/api/youtube-stats?videoId=${encodeURIComponent(ids.join(','))}`);
+   const base=API._getApiBase();
+   const response=await fetch(`${base}/youtube-stats?videoId=${encodeURIComponent(ids.join(','))}`);
    const data=await response.json();
    const stats=data.stats||{};
    document.querySelectorAll('.card-stats[data-video-id]').forEach(node=>{

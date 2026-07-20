@@ -14,12 +14,12 @@ const Router={
  },
  async populateHeaderInfo(){
   const channelData=await API.getYoutubeChannel();
-  if(channelData.channel){
+  if(channelData.profileImageUrl){
    const profileImg=document.getElementById('channel-profile');
    const subCount=document.getElementById('subscriber-count');
-   if(profileImg) profileImg.src=channelData.channel.picture;
+   if(profileImg) profileImg.src=channelData.profileImageUrl;
    if(subCount){
-    const count=parseInt(channelData.channel.subscriberCount)||0;
+    const count=parseInt(channelData.subscriberCount)||0;
     if(count>0){
      subCount.textContent=new Intl.NumberFormat().format(count)+' subscribers';
     }
