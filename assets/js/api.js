@@ -7,7 +7,8 @@ const API={
    return '/.netlify/functions';
  },
  async getContent(){
-   const r=await fetch('/data/content.json');
+   const base=this._getApiBase();
+   const r=await fetch(`${base}/content`);
    const items=await r.json();
    const getTime=(item)=>{
      const value=item?.published;

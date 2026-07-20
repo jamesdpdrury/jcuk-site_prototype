@@ -182,6 +182,12 @@ class AdminHandler(BaseHTTPRequestHandler):
             self.send_json(200, visible_items)
             return
 
+        if path in ('/api/content', '/api/content/'):
+            items = sort_items(read_items())
+            visible_items = [item for item in items if is_publicly_visible(item)]
+            self.send_json(200, visible_items)
+            return
+
         if path in ('/data/content.json', '/data/content.json/'):
             items = sort_items(read_items())
             visible_items = [item for item in items if is_publicly_visible(item)]
