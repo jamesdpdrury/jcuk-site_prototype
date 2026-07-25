@@ -128,7 +128,6 @@
   .header-left{
     width:100%;
     align-items:center;
-    margin-top: -25px;
   }
   
   .header-nav{
@@ -136,6 +135,7 @@
     flex-wrap:wrap;
     gap:1rem;
     justify-content: center;
+    padding-right: 1rem;
   }
   
   .subscriber-section{
@@ -150,11 +150,12 @@
   .header-title{
     font-size: 1.6rem;
         margin-bottom: 5px;
-        text-align: center;
+        text-align: right;
   }
   
   .header-tagline{
     font-size:0.75rem;
+    text-align: right;
   }
   
   .profile-image {
