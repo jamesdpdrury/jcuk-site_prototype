@@ -4,8 +4,11 @@ const CruiseFilterView = {
     const settings = await API.getSettings();
     VideoCard.logoMap = settings.logos || {};
 
-    // Decode the cruise name from URL (replace hyphens with spaces)
-    const displayName = decodeURIComponent(cruiseName).replace(/-/g, ' ');
+    // Decode the cruise name from URL (replace hyphens with spaces) and capitalize
+    const displayName = decodeURIComponent(cruiseName).replace(/-/g, ' ')
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
 
     // Filter videos by cruise line (brand)
     const filteredItems = items.filter(item => 

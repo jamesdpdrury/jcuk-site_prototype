@@ -16,10 +16,10 @@ const HomeView = {
     const currentPlaylist = settings.currentPlaylist || 'Virgin Voyages June 2026';
     const currentPlaylistVideos = items.filter(v => (v.playlist || '').trim() === currentPlaylist);
 
-    // Get all unique playlists except current
+    // Get all unique playlists except current and hidden ones
     const allPlaylists = settings.playlists || {};
     const otherPlaylists = Object.entries(allPlaylists).filter(
-      ([name]) => name !== currentPlaylist
+      ([name, data]) => name !== currentPlaylist && data?.show !== false
     );
 
     // Get unique cruise lines (brands)
@@ -55,7 +55,7 @@ const HomeView = {
     // Build current playlist section HTML
     const currentPlaylistHTML = currentPlaylistVideos.length > 0 ? `
       <section class="current-playlist-section">
-        <h2>${currentPlaylist}</h2>
+        <h2><span style="color: #000;">Current Playlist: </span>${currentPlaylist}</h2>
         <div class="grid">
           ${currentPlaylistVideos.map(v => VideoCard.render(v)).join('')}
         </div>

@@ -4,8 +4,11 @@ const ParkFilterView = {
     const settings = await API.getSettings();
     VideoCard.logoMap = settings.logos || {};
 
-    // Decode the park name from URL (replace hyphens with spaces)
-    const displayName = decodeURIComponent(parkName).replace(/-/g, ' ');
+    // Decode the park name from URL (replace hyphens with spaces) and capitalize
+    const displayName = decodeURIComponent(parkName).replace(/-/g, ' ')
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
 
     // Filter videos by theme park (parkName is an array)
     const filteredItems = items.filter(item => 
