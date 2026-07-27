@@ -1,5 +1,24 @@
+const https = require('https');
 const fs = require('fs');
 const path = require('path');
+
+function fetchFromYouTube(url) {
+  return new Promise((resolve, reject) => {
+    https.get(url, (res) => {
+      let data = '';
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
+      res.on('end', () => {
+        try {
+          resolve(JSON.parse(data));
+        } catch (e) {
+          reject(e);
+        }
+      });
+    }).on('error', reject);
+  });
+}
 
 exports.handler = async (event, context) => {
   try {
@@ -23,30 +42,41 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // Read cached stats from repository
-    const statsPath = path.join(__dirname, '../../data/youtube-stats-cache.json');
-    let allStats = {};
+    // Get API credentials from environment variables
+    const youtubeApiKey = process.env.YOUTUBE_API_KEY;
     
-    try {
-      const statsContent = fs.readFileSync(statsPath, 'utf-8');
-      allStats = JSON.parse(statsContent);
-    } catch (e) {
-      console.warn('Could not read youtube-stats-cache.json:', e);
+    if (!youtubeApiKey) {
+      console.warn('YouTube API key not configured, falling back to cache');
+      return getFallbackStats(videoIds);
     }
 
-    // Extract requested stats
+    // Fetch live stats from YouTube API
     const stats = {};
-    videoIds.forEach(videoId => {
-      if (allStats[videoId]) {
-        stats[videoId] = allStats[videoId];
+    
+    try {
+      const url = `https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${videoIds.join(',')}&key=${youtubeApiKey}`;
+      const response = await fetchFromYouTube(url);
+      
+      if (response.items) {
+        response.items.forEach(item => {
+          stats[item.id] = {
+            viewCount: parseInt(item.statistics.viewCount || 0),
+            commentCount: parseInt(item.statistics.commentCount || 0),
+            likeCount: parseInt(item.statistics.likeCount || 0)
+          };
+        });
       }
-    });
+    } catch (error) {
+      console.warn('Failed to fetch from YouTube API, falling back to cache:', error.message);
+      return getFallbackStats(videoIds);
+    }
 
     return {
       statusCode: 200,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': '*',
+        'Cache-Control': 'max-age=3600' // Cache for 1 hour
       },
       body: JSON.stringify({ stats })
     };
@@ -59,3 +89,34 @@ exports.handler = async (event, context) => {
     };
   }
 };
+
+function getFallbackStats(videoIds) {
+  try {
+    const statsPath = path.join(__dirname, '../../data/youtube-stats-cache.json');
+    const statsContent = fs.readFileSync(statsPath, 'utf-8');
+    const allStats = JSON.parse(statsContent);
+    
+    const stats = {};
+    videoIds.forEach(videoId => {
+      if (allStats[videoId]) {
+        stats[videoId] = allStats[videoId];
+      }
+    });
+    
+    return {
+      statusCode: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
+      body: JSON.stringify({ stats })
+    };
+  } catch (e) {
+    console.error('Failed to read cache file:', e);
+    return {
+      statusCode: 500,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ error: 'Failed to fetch stats', stats: {} })
+    };
+  }
+}
