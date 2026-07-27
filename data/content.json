@@ -631,7 +631,7 @@
     "slug": "virgin-voyages-june-2026-part-4",
     "youtubeId": "Nyeut1VOVDA",
     "published": "2026-07-26",
-    "featured": false,
+    "featured": true,
     "playlist": "Virgin Voyages June 2026",
     "episode": "4",
     "summary": "Day 4 aboard Virgin Voyages' Valiant Lady!\n\nToday we arrive in La Spezia, Italy, where we take a short walk around the port and enjoy a cheeky Aperol Spritz before heading back onboard.\n\nThe afternoon is all about relaxing, editing and preparing for another fantastic evening at sea. We return to Richard's Rooftop for Happy Hour before trying Ariya, the brand-new restaurant onboard Valiant Lady... and it definitely didn't disappoint!\n\nWe then head to The Manor for the hilarious Pay Attention game show before ending the evening with another incredible performance from The Magnets in The Red Room (including a certain Celine Dion classic that made James very happy!).\n\nNext time... we're in Cannes for the unforgettable Scarlet Night!",
@@ -652,7 +652,8 @@
     ],
     "shipName": "Valiant Lady",
     "parkName": [],
-    "hotelBrand": []
+    "hotelBrand": [],
+    "travelBrand": []
   },
   {
     "id": 1784532354812,
