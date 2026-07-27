@@ -217,8 +217,18 @@ class AdminHandler(BaseHTTPRequestHandler):
             self.serve_file('index.html')
             return
 
+        # For all other paths, try to serve as a file first, then fall back to index.html for SPA routing
         requested = path.lstrip('/')
-        self.serve_file(requested or 'index.html')
+        safe_path = requested.replace('..', '')
+        full_path = os.path.join(ROOT, safe_path)
+        
+        # If it's a real file that exists, serve it
+        if os.path.exists(full_path) and os.path.isfile(full_path):
+            self.serve_file(requested)
+            return
+        
+        # Otherwise, for SPA routing, serve index.html
+        self.serve_file('index.html')
 
     def do_POST(self):
         parsed = urlparse(self.path)

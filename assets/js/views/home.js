@@ -16,11 +16,18 @@ const HomeView = {
     const currentPlaylist = settings.currentPlaylist || 'Virgin Voyages June 2026';
     const currentPlaylistVideos = items.filter(v => (v.playlist || '').trim() === currentPlaylist);
 
-    // Get all unique playlists except current and hidden ones
+    // Get all unique playlists except current and hidden ones, sorted by newest video
     const allPlaylists = settings.playlists || {};
-    const otherPlaylists = Object.entries(allPlaylists).filter(
-      ([name, data]) => name !== currentPlaylist && data?.show !== false
-    );
+    const otherPlaylists = Object.entries(allPlaylists)
+      .filter(([name, data]) => name !== currentPlaylist && data?.show !== false)
+      .map(([name, data]) => {
+        // Find the newest video in this playlist (items are already sorted newest first)
+        const newestVideo = items.find(v => (v.playlist || '').trim() === name);
+        const publishDate = newestVideo?.published ? new Date(newestVideo.published).getTime() : 0;
+        return [name, data, publishDate];
+      })
+      .sort((a, b) => b[2] - a[2]) // Sort by publish date descending (newest first)
+      .map(([name, data]) => [name, data]); // Remove the date from tuple
 
     // Get unique cruise lines (brands)
     const cruiseLines = {};
