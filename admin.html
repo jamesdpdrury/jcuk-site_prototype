@@ -108,7 +108,7 @@
       font-size: .92rem;
     }
 
-    input, textarea {
+    input, textarea, select {
       width: 100%;
       border: 1px solid var(--border);
       border-radius: 14px;
@@ -124,7 +124,7 @@
       line-height: 1.45;
     }
 
-    input:focus, textarea:focus {
+    input:focus, textarea:focus, select:focus {
       outline: none;
       border-color: #baa57f;
       box-shadow: 0 0 0 4px rgba(186, 165, 127, .14);
@@ -591,6 +591,16 @@
               <label>YouTube Channel ID
                 <input id="channel-id" name="youtubeChannelId" placeholder="UCxxxxxx...">
               </label>
+              <label>Current Playlist (Featured on Home)
+                <select id="current-playlist" name="currentPlaylist">
+                  <option value="">Select a playlist...</option>
+                  <option value="Virgin Voyages June 2026">Virgin Voyages June 2026</option>
+                  <option value="Disney Fantasy Transatlantic November 2025">Disney Fantasy Transatlantic November 2025</option>
+                  <option value="Italian Wedding May 2026">Italian Wedding May 2026</option>
+                  <option value="Summer 2026">Summer 2026</option>
+                  <option value="New York February 2026">New York February 2026</option>
+                </select>
+              </label>
               <button type="submit">Save settings</button>
             </form>
             <div id="settings-status" class="status"></div>
@@ -797,6 +807,7 @@
     const shipNameOptions = document.getElementById('ship-name-options');
     const parkNameOptions = document.getElementById('park-name-options');
     const channelIdInput = document.getElementById('channel-id');
+    const currentPlaylistSelect = document.getElementById('current-playlist');
     const chipFieldRoots = {
       type: document.querySelector('[data-chip-field="type"]'),
       hotelBrand: document.querySelector('[data-chip-field="hotelBrand"]'),
@@ -965,6 +976,7 @@
       settingsData = result || {};
       apiKeyInput.value = settingsData.youtubeApiKey || '';
       channelIdInput.value = settingsData.youtubeChannelId || '';
+      currentPlaylistSelect.value = settingsData.currentPlaylist || '';
       renderLogoManager();
       return result;
     }
@@ -1188,6 +1200,7 @@
         adminPasswordInput.value = settingsData.adminPassword || '';
         apiKeyInput.value = settingsData.youtubeApiKey || '';
         channelIdInput.value = settingsData.youtubeChannelId || '';
+        currentPlaylistSelect.value = settingsData.currentPlaylist || '';
         renderLogoManager();
       } catch (error) {
         console.error(error);
@@ -1380,7 +1393,8 @@
       try {
         const settingsPayload = {
           youtubeApiKey: apiKeyInput.value.trim(),
-          youtubeChannelId: channelIdInput.value.trim()
+          youtubeChannelId: channelIdInput.value.trim(),
+          currentPlaylist: currentPlaylistSelect.value.trim()
         };
         if (adminPasswordInput.value) {
           settingsPayload.adminPassword = adminPasswordInput.value;

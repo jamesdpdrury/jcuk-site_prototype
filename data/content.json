@@ -566,7 +566,7 @@
     "slug": "virgin-voyages-june-2026-part-6",
     "youtubeId": "jW31fSKlTK8",
     "published": "2026-08-09",
-    "featured": false,
+    "featured": true,
     "playlist": "Virgin Voyages June 2026",
     "episode": "6",
     "summary": "Welcome to Episode 6 of our Virgin Voyages Valiant Lady cruise series!\n\nAfter an incredible week sailing the Mediterranean, it\u2019s time to enjoy our final days onboard before heading home.\n\nWe begin with a relaxed morning at sea before experiencing the resident magician at The Manor, followed by another unforgettable evening featuring dinner at Test Kitchen, a walk through Ibiza after dark, and incredible views of Valiant Lady lit up in port.\n\nThe next day we spend a little more time exploring beautiful Ibiza before one final Rockstar Happy Hour at Richard\u2019s Rooftop, dinner at Pink Agave and another visit to the wonderfully bizarre Untitled Dance Show Party Thing.\n\nBefore leaving the ship we each take $20 into the casino to see if the Little Shop of Horrors slot machines can make us rich\u2026\n\nFinally it\u2019s time to say goodbye to Valiant Lady as we travel home to the UK in British Airways Club Europe and look back on an unforgettable holiday.",
@@ -600,7 +600,7 @@
     "slug": "virgin-voyages-june-2026-part-5",
     "youtubeId": "c63MwjLebSI",
     "published": "2026-08-02",
-    "featured": false,
+    "featured": true,
     "playlist": "Virgin Voyages June 2026",
     "episode": "5",
     "summary": "Today is one of the most anticipated days of our Virgin Voyages cruise... Scarlet Night! \ud83d\udd34\n\nBefore the celebrations begin, we arrive in beautiful Cannes, France, where we take the tender ashore and hop aboard Le Petit Train for a tour around the city. After exploring the streets of Cannes (and surviving a very bumpy tender ride back!), we head onboard for lunch, our first visit to the hot tubs and, of course, our daily champagne at Richard's Rooftop.\n\nAs evening falls, it's finally time for Scarlet Night. We enjoy dinner at The Wake before experiencing the incredible entertainment that makes Scarlet Night one of Virgin Voyages' signature events. From Paint It Red to the unforgettable pool party, it's a night we'll never forget!",
@@ -622,7 +622,8 @@
     ],
     "shipName": "Valiant Lady",
     "parkName": [],
-    "hotelBrand": []
+    "hotelBrand": [],
+    "travelBrand": []
   },
   {
     "id": 1784536469957,

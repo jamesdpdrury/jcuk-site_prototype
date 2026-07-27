@@ -14,7 +14,6 @@ const Header=()=>`
     <nav class="header-nav">
       <a href="/" data-link>Home</a>
       <a href="/videos" data-link>Videos</a>
-      <a href="/calendar" data-link>Calendar</a>
       <div class="subscriber-section">
         <span class="subscriber-count" id="subscriber-count">—</span>
         <a href="https://www.youtube.com/@JamesAndChrisUK?sub_confirmation=1" target="_blank" class="subscribe-btn">SUBSCRIBE</a>

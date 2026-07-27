@@ -32,7 +32,8 @@ const Router={
   if(p==='/videos') return VideosView.render().then(()=>Router.populateHeaderInfo());
   if(p.startsWith('/v/')) return DeepLinkView.render(p.slice(3)).then(()=>Router.populateHeaderInfo());
   if(p.startsWith('/video/')) return DeepLinkView.render(p.slice(7)).then(()=>Router.populateHeaderInfo());
-  if(p==='/calendar') return CalendarView.render().then(()=>Router.populateHeaderInfo());
+  if(p.startsWith('/cruise/')) return CruiseFilterView.render(p.slice(8)).then(()=>Router.populateHeaderInfo());
+  if(p.startsWith('/park/')) return ParkFilterView.render(p.slice(6)).then(()=>Router.populateHeaderInfo());
   app.innerHTML="<div class='container'><h1>404</h1></div>";
  }
 };
