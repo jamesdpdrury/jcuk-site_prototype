@@ -13,12 +13,13 @@ const CruiseFilterView = {
     );
 
     const html = `
-      <div class="container">
+      ${Header()}
+      <main class="container">
         <h1>${displayName} Videos</h1>
-        <div class="videos-grid">
+        <div class="grid">
           ${filteredItems.map(v => VideoCard.render(v)).join('')}
         </div>
-      </div>
+      </main>
     `;
 
     document.getElementById('app').innerHTML = html;

@@ -68,12 +68,13 @@ const HomeView = {
         <h2>All Playlists</h2>
         <div class="playlists-grid">
           ${otherPlaylists.map(([name, data]) => `
-            <a href="/videos?playlist=${encodeURIComponent(name)}" data-link class="playlist-card">
+            <div class="playlist-card" data-playlist-name="${escapeHtml(name)}">
               <img src="${data.thumbnail}" alt="${name}" class="playlist-thumbnail">
               <div class="playlist-card-title">${name}</div>
-            </a>
+            </div>
           `).join('')}
         </div>
+        <div id="playlist-detail" class="playlist-detail"></div>
       </section>
     ` : '';
 
@@ -136,6 +137,51 @@ const HomeView = {
         ${theparksHTML}
       </main>
     `;
+    
+    // Add playlist click handlers
+    const playlistCards = app.querySelectorAll('.playlist-card');
+    playlistCards.forEach(card => {
+      card.addEventListener('click', async () => {
+        const playlistName = card.getAttribute('data-playlist-name');
+        const playlistVideos = items.filter(v => (v.playlist || '').trim() === playlistName);
+        const detailDiv = document.getElementById('playlist-detail');
+        
+        if (detailDiv.classList.contains('active') && detailDiv.getAttribute('data-playlist') === playlistName) {
+          // Close if already open
+          detailDiv.classList.remove('active');
+          detailDiv.innerHTML = '';
+          return;
+        }
+        
+        // Show playlist videos
+        detailDiv.innerHTML = `
+          <div class="playlist-detail-header">
+            <h3>${playlistName}</h3>
+            <button class="btn-close-playlist">Close Playlist</button>
+          </div>
+          <div class="grid">
+            ${playlistVideos.map(v => VideoCard.render(v)).join('')}
+          </div>
+        `;
+        detailDiv.setAttribute('data-playlist', playlistName);
+        detailDiv.classList.add('active');
+        VideoCard.hydrateStats();
+        
+        // Close button handler
+        const closeBtn = detailDiv.querySelector('.btn-close-playlist');
+        closeBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          detailDiv.classList.remove('active');
+          detailDiv.innerHTML = '';
+        });
+      });
+    });
+    
     VideoCard.hydrateStats();
   }
 };
+
+function escapeHtml(text) {
+  const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+  return text.replace(/[&<>"']/g, m => map[m]);
+}
