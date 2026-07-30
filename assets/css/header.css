@@ -144,12 +144,13 @@
     align-items: stretch;
     gap: 0.75rem;
     padding-right: 0;
+    margin-top: -31px;
   }
 
   .nav-links {
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: right;
     align-items: center;
     gap: 2rem;
   }
@@ -160,7 +161,7 @@
   }
   
   .subscriber-section{
-    width: 100%;
+    width: calc(100% - 20px);
     border-left: none;
     border-top: 2px solid rgba(0, 0, 0, 0.2);
     background: rgba(255, 255, 255, 0.22);
