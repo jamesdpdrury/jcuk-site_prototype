@@ -195,6 +195,12 @@
       background: #fff;
     }
 
+    .video-card.just-saved {
+      border-color: #baa57f;
+      box-shadow: 0 0 0 4px rgba(186, 165, 127, .18);
+      background: #fffaf1;
+    }
+
     .video-card + .video-card { margin-top: 10px; }
 
     .video-card img {
@@ -594,11 +600,6 @@
               <label>Current Playlist (Featured on Home)
                 <select id="current-playlist" name="currentPlaylist">
                   <option value="">Select a playlist...</option>
-                  <option value="Virgin Voyages June 2026">Virgin Voyages June 2026</option>
-                  <option value="Disney Fantasy Transatlantic November 2025">Disney Fantasy Transatlantic November 2025</option>
-                  <option value="Italian Wedding May 2026">Italian Wedding May 2026</option>
-                  <option value="Summer 2026">Summer 2026</option>
-                  <option value="New York February 2026">New York February 2026</option>
                 </select>
               </label>
               <button type="submit">Save settings</button>
@@ -836,6 +837,7 @@
     let videos = [];
     let settingsData = {};
     let slugIsManual = false;
+    let lastSavedVideoId = null;
 
     function escapeHtml(value) {
       return String(value || '')
@@ -890,6 +892,38 @@
         seen.add(normalized);
         return true;
       });
+    }
+
+    function getPlaylistEntriesByLatestVideo() {
+      const grouped = new Map();
+      videos.forEach(video => {
+        const name = String(video.playlist || '').trim();
+        if (!name) return;
+        const publishedTime = video?.published ? new Date(video.published).getTime() : 0;
+        const current = grouped.get(name);
+        if (!current || publishedTime > current.latestPublishedTime) {
+          grouped.set(name, {
+            name,
+            latestPublishedTime: Number.isNaN(publishedTime) ? 0 : publishedTime
+          });
+        }
+      });
+      return Array.from(grouped.values())
+        .sort((a, b) => {
+          if (b.latestPublishedTime !== a.latestPublishedTime) {
+            return b.latestPublishedTime - a.latestPublishedTime;
+          }
+          return a.name.localeCompare(b.name);
+        });
+    }
+
+    function renderCurrentPlaylistOptions() {
+      if (!currentPlaylistSelect) return;
+      const selectedValue = (currentPlaylistSelect.value || settingsData.currentPlaylist || '').trim();
+      const options = getPlaylistEntriesByLatestVideo();
+      currentPlaylistSelect.innerHTML = '<option value="">Select a playlist...</option>' +
+        options.map(({ name }) => '<option value="' + escapeHtml(name) + '">' + escapeHtml(name) + '</option>').join('');
+      currentPlaylistSelect.value = selectedValue;
     }
 
     function getFieldValue(name) {
@@ -1089,13 +1123,14 @@
     }
 
     function updateSuggestionLists() {
-      populateDatalist(playlistOptions, uniqueValues(videos.map(video => (video.playlist || '').trim()).filter(Boolean)).sort((a, b) => a.localeCompare(b)));
+      populateDatalist(playlistOptions, getPlaylistEntriesByLatestVideo().map(entry => entry.name));
       populateDatalist(typeOptions, collectSuggestions('type'));
       populateDatalist(hotelBrandOptions, collectSuggestions('hotelBrand'));
       populateDatalist(travelBrandOptions, collectSuggestions('travelBrand'));
       populateDatalist(cruiseLineOptions, collectSuggestions('brand'));
       populateDatalist(shipNameOptions, collectSuggestions('shipName'));
       populateDatalist(parkNameOptions, collectSuggestions('parkName'));
+      renderCurrentPlaylistOptions();
     }
 
     function updateConditionalFields() {
@@ -1205,7 +1240,8 @@
           const thumb = (video.thumbnail || '').trim() || 'https://i.ytimg.com/vi/' + video.youtubeId + '/hqdefault.jpg';
           const scheduled = isScheduled(video);
           const deadline = getPublishDeadline(video);
-          return '<article class="video-card">' +
+          const isJustSaved = lastSavedVideoId != null && Number(video.id) === Number(lastSavedVideoId);
+          return '<article class="video-card' + (isJustSaved ? ' just-saved' : '') + '" data-video-id="' + escapeHtml(video.id) + '">' +
             '<img src="' + thumb + '" alt="' + escapeHtml(video.title || '') + '" onerror="this.onerror=null;this.src=\'https://i.ytimg.com/vi/' + video.youtubeId + '/mqdefault.jpg\';">' +
             '<div>' +
             '<div class="title-row">' +
@@ -1243,6 +1279,18 @@
       }).join('');
       
       attachPlaylistControlListeners();
+      revealLastSavedVideo();
+    }
+
+    function revealLastSavedVideo() {
+      if (lastSavedVideoId == null) return;
+      const card = videoList.querySelector('[data-video-id="' + String(lastSavedVideoId).replace(/"/g, '&quot;') + '"]');
+      if (!card) return;
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => {
+        card.classList.remove('just-saved');
+        lastSavedVideoId = null;
+      }, 4000);
     }
 
     function attachPlaylistControlListeners() {
@@ -1311,6 +1359,7 @@
         adminPasswordInput.value = settingsData.adminPassword || '';
         apiKeyInput.value = settingsData.youtubeApiKey || '';
         channelIdInput.value = settingsData.youtubeChannelId || '';
+        renderCurrentPlaylistOptions();
         currentPlaylistSelect.value = settingsData.currentPlaylist || '';
         renderLogoManager();
         renderVideoList();
@@ -1552,6 +1601,7 @@
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || 'Could not save video');
 
+        lastSavedVideoId = result.video?.id || payload.id || null;
         status.className = 'status success';
         status.textContent = payload.id ? 'Video updated successfully.' : 'Video added successfully.';
         resetForm();

@@ -16,18 +16,37 @@ const HomeView = {
     const currentPlaylist = settings.currentPlaylist || 'Virgin Voyages June 2026';
     const currentPlaylistVideos = items.filter(v => (v.playlist || '').trim() === currentPlaylist);
 
-    // Get all unique playlists except current and hidden ones, sorted by newest video
+    const getPublishTime = (value) => {
+      if (!value) return 0;
+      const parsed = new Date(value);
+      return Number.isNaN(parsed.getTime()) ? 0 : parsed.getTime();
+    };
+
+    // Build playlist cards from visible content first so hidden playlists and future-only playlists stay excluded.
     const allPlaylists = settings.playlists || {};
-    const otherPlaylists = Object.entries(allPlaylists)
-      .filter(([name, data]) => name !== currentPlaylist && data?.show !== false)
-      .map(([name, data]) => {
-        // Find the newest video in this playlist (items are already sorted newest first)
-        const newestVideo = items.find(v => (v.playlist || '').trim() === name);
-        const publishDate = newestVideo?.published ? new Date(newestVideo.published).getTime() : 0;
-        return [name, data, publishDate];
+    const visiblePlaylistEntries = items.reduce((entries, video) => {
+      const name = (video.playlist || '').trim();
+      if (!name) return entries;
+
+      const publishTime = getPublishTime(video.published);
+      const currentEntry = entries[name];
+      if (!currentEntry || publishTime > currentEntry.publishTime) {
+        entries[name] = { video, publishTime };
+      }
+      return entries;
+    }, {});
+
+    const otherPlaylists = Object.entries(visiblePlaylistEntries)
+      .filter(([name]) => name !== currentPlaylist && allPlaylists[name]?.show !== false)
+      .map(([name, entry]) => {
+        const newestVideo = entry.video;
+        const playlistSettings = allPlaylists[name] || {};
+        const videoCount = items.filter(v => (v.playlist || '').trim() === name).length;
+        const thumbnail = (playlistSettings.thumbnail || newestVideo?.thumbnail || '').trim()
+          || `https://i.ytimg.com/vi/${newestVideo?.youtubeId}/hqdefault.jpg`;
+        return { name, thumbnail, publishDate: entry.publishTime, videoCount };
       })
-      .sort((a, b) => b[2] - a[2]) // Sort by publish date descending (newest first)
-      .map(([name, data]) => [name, data]); // Remove the date from tuple
+      .sort((a, b) => b.publishDate - a.publishDate || a.name.localeCompare(b.name));
 
     // Get unique cruise lines (brands)
     const cruiseLines = {};
@@ -37,11 +56,16 @@ const HomeView = {
         if (!cruiseLines[key]) {
           cruiseLines[key] = {
             name: v.brand,
-            logo: (settings.logos?.brand?.[v.brand] || '').substring(0, 100)
+            logo: (settings.logos?.brand?.[v.brand] || '').substring(0, 100),
+            videoCount: 0
           };
         }
+        cruiseLines[key].videoCount += 1;
       }
     });
+
+    const sortedCruiseLines = Object.entries(cruiseLines)
+      .sort(([, a], [, b]) => a.name.localeCompare(b.name));
 
     // Get unique theme parks (parkName is array)
     const themeparks = {};
@@ -52,12 +76,17 @@ const HomeView = {
           if (!themeparks[key]) {
             themeparks[key] = {
               name: park,
-              logo: (settings.logos?.parkName?.[park] || '').substring(0, 100)
+              logo: (settings.logos?.parkName?.[park] || '').substring(0, 100),
+              videoCount: 0
             };
           }
+          themeparks[key].videoCount += 1;
         });
       }
     });
+
+    const sortedThemeParks = Object.entries(themeparks)
+      .sort(([, a], [, b]) => a.name.localeCompare(b.name));
 
     // Build current playlist section HTML
     const currentPlaylistHTML = currentPlaylistVideos.length > 0 ? `
@@ -72,12 +101,13 @@ const HomeView = {
     // Build other playlists grid
     const otherPlaylistsHTML = otherPlaylists.length > 0 ? `
       <section class="playlists-section">
-        <h2>All Playlists</h2>
+        <h2>Other Playlists</h2>
         <div class="playlists-grid">
-          ${otherPlaylists.map(([name, data]) => `
+          ${otherPlaylists.map(({ name, thumbnail, videoCount }) => `
             <div class="playlist-card" data-playlist-name="${escapeHtml(name)}">
-              <img src="${data.thumbnail}" alt="${name}" class="playlist-thumbnail">
+              <img src="${thumbnail}" alt="${name}" class="playlist-thumbnail">
               <div class="playlist-card-title">${name}</div>
+              <div class="card-count-badge">${videoCount}</div>
             </div>
           `).join('')}
         </div>
@@ -86,15 +116,16 @@ const HomeView = {
     ` : '';
 
     // Build cruise lines grid
-    const cruiseLinesHTML = Object.keys(cruiseLines).length > 0 ? `
+    const cruiseLinesHTML = sortedCruiseLines.length > 0 ? `
       <section class="filters-section">
         <h2>Cruise Lines</h2>
         <div class="filters-grid">
-          ${Object.entries(cruiseLines).map(([key, cruise]) => {
+          ${sortedCruiseLines.map(([key, cruise]) => {
             const logoBase64 = settings.logos?.brand?.[cruise.name] || '';
             return `
               <a href="/cruise/${key}" data-link class="filter-card">
                 ${logoBase64 ? `<img src="${logoBase64}" alt="${cruise.name}" class="filter-logo">` : `<div class="filter-label">${cruise.name}</div>`}
+                <div class="card-count-badge">${cruise.videoCount}</div>
               </a>
             `;
           }).join('')}
@@ -103,15 +134,16 @@ const HomeView = {
     ` : '';
 
     // Build theme parks grid
-    const theparksHTML = Object.keys(themeparks).length > 0 ? `
+    const theparksHTML = sortedThemeParks.length > 0 ? `
       <section class="filters-section">
         <h2>Theme Parks</h2>
         <div class="filters-grid">
-          ${Object.entries(themeparks).map(([key, park]) => {
+          ${sortedThemeParks.map(([key, park]) => {
             const logoBase64 = settings.logos?.parkName?.[park.name] || '';
             return `
               <a href="/park/${key}" data-link class="filter-card">
                 ${logoBase64 ? `<img src="${logoBase64}" alt="${park.name}" class="filter-logo">` : `<div class="filter-label">${park.name}</div>`}
+                <div class="card-count-badge">${park.videoCount}</div>
               </a>
             `;
           }).join('')}
