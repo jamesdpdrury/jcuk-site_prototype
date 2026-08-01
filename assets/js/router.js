@@ -15,6 +15,9 @@ const Router={
      </main>`;
  },
  init(){
+   if('scrollRestoration' in history){
+    history.scrollRestoration='manual';
+   }
   document.addEventListener('click',e=>{
    const a=e.target.closest('a[data-link]');
    if(!a)return;
@@ -46,6 +49,7 @@ const Router={
     }
  },
  async render(){
+   window.scrollTo({top:0,left:0,behavior:'auto'});
   const p=location.pathname;
     Router.renderLoadingShell();
 
