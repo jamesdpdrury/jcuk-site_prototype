@@ -1,6 +1,19 @@
 
 const app=document.getElementById('app');
 const Router={
+ renderLoadingShell(){
+    app.innerHTML=`
+     ${Header()}
+     <main class="container page-loading" aria-live="polite" aria-busy="true">
+        <div class="loading-line loading-line-title"></div>
+        <div class="loading-line loading-line-wide"></div>
+        <div class="loading-grid">
+            <div class="loading-card"></div>
+            <div class="loading-card"></div>
+            <div class="loading-card"></div>
+        </div>
+     </main>`;
+ },
  init(){
   document.addEventListener('click',e=>{
    const a=e.target.closest('a[data-link]');
@@ -13,28 +26,65 @@ const Router={
   Router.render();
  },
  async populateHeaderInfo(){
-  const channelData=await API.getYoutubeChannel();
-  if(channelData.profileImageUrl){
-   const profileImg=document.getElementById('channel-profile');
-   const subCount=document.getElementById('subscriber-count');
-   if(profileImg) profileImg.src=channelData.profileImageUrl;
-   if(subCount){
-    const count=parseInt(channelData.subscriberCount)||0;
-    if(count>0){
-     subCount.textContent=new Intl.NumberFormat().format(count)+' subscribers';
+    const profileImg=document.getElementById('channel-profile');
+    const subCount=document.getElementById('subscriber-count');
+    const channelData=await API.getYoutubeChannel();
+
+    if(profileImg && channelData.profileImageUrl){
+     profileImg.src=channelData.profileImageUrl;
+     profileImg.classList.remove('is-loading');
     }
-   }
-  }
+
+    if(subCount){
+     const count=parseInt(channelData.subscriberCount)||0;
+     if(count>0){
+        subCount.textContent=new Intl.NumberFormat().format(count)+' subscribers';
+     }else{
+        subCount.textContent='Subscribe on YouTube';
+     }
+     subCount.classList.remove('is-loading');
+    }
  },
- render(){
+ async render(){
   const p=location.pathname;
-  if(p==='/'||p==='/watch') return HomeView.render().then(()=>Router.populateHeaderInfo());
-  if(p==='/videos') return VideosView.render().then(()=>Router.populateHeaderInfo());
-  if(p.startsWith('/v/')) return DeepLinkView.render(p.slice(3)).then(()=>Router.populateHeaderInfo());
-  if(p.startsWith('/video/')) return DeepLinkView.render(p.slice(7)).then(()=>Router.populateHeaderInfo());
-  if(p.startsWith('/cruise/')) return CruiseFilterView.render(p.slice(8)).then(()=>Router.populateHeaderInfo());
-  if(p.startsWith('/park/')) return ParkFilterView.render(p.slice(6)).then(()=>Router.populateHeaderInfo());
-  app.innerHTML="<div class='container'><h1>404</h1></div>";
+    Router.renderLoadingShell();
+
+    try{
+     if(p==='/'||p==='/watch'){
+        await HomeView.render();
+        Router.populateHeaderInfo();
+        return;
+     }
+     if(p==='/videos'){
+        await VideosView.render();
+        Router.populateHeaderInfo();
+        return;
+     }
+     if(p.startsWith('/v/')){
+        await DeepLinkView.render(p.slice(3));
+        Router.populateHeaderInfo();
+        return;
+     }
+     if(p.startsWith('/video/')){
+        await DeepLinkView.render(p.slice(7));
+        Router.populateHeaderInfo();
+        return;
+     }
+     if(p.startsWith('/cruise/')){
+        await CruiseFilterView.render(p.slice(8));
+        Router.populateHeaderInfo();
+        return;
+     }
+     if(p.startsWith('/park/')){
+        await ParkFilterView.render(p.slice(6));
+        Router.populateHeaderInfo();
+        return;
+     }
+     app.innerHTML="<div class='container'><h1>404</h1></div>";
+    }catch(error){
+     console.error(error);
+     app.innerHTML="<div class='container'><h1>Something went wrong</h1><p>Please refresh and try again.</p></div>";
+    }
  }
 };
 Router.init();

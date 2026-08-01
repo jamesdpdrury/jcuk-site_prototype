@@ -11,14 +11,17 @@ exports.handler = async (event, context) => {
     // Don't expose sensitive keys to the public
     const publicSettings = {
       youtubeChannelId: settings.youtubeChannelId || '',
-      logos: settings.logos || {}
+      logos: settings.logos || {},
+      playlists: settings.playlists || {},
+      currentPlaylist: settings.currentPlaylist || ''
     };
     
     return {
       statusCode: 200,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': '*',
+        'Cache-Control': 'public, max-age=300'
       },
       body: JSON.stringify(publicSettings)
     };

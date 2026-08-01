@@ -1,8 +1,7 @@
 
 const VideosView={
  async render(){
- const items=await API.getContent();
- const settings=await API.getSettings();
+ const [items,settings]=await Promise.all([API.getContent(),API.getSettings()]);
  VideoCard.logoMap=settings.logos||{};
  
  app.innerHTML=`

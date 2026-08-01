@@ -1,12 +1,27 @@
 
 const HomeView = {
   async render() {
-    const items = await API.getContent();
-    const settings = await API.getSettings();
+    const [items, settings] = await Promise.all([
+      API.getContent(),
+      API.getSettings()
+    ]);
+    const safeItems = Array.isArray(items) ? items : [];
     VideoCard.logoMap = settings.logos || {};
 
     // Get featured video
-    const featured = items.find(i => i.featured) || items[0];
+    const featured = safeItems.find(i => i.featured) || safeItems[0];
+    if (!featured) {
+      app.innerHTML = `
+        ${Header()}
+        <main class="container">
+          <section class="section">
+            <h1>No videos yet</h1>
+            <p>Content will appear here once videos are available.</p>
+          </section>
+        </main>
+      `;
+      return;
+    }
     const img = (featured.thumbnail && featured.thumbnail.trim()) ?
         featured.thumbnail :
         `https://i.ytimg.com/vi/${featured.youtubeId}/maxresdefault.jpg`;
@@ -14,7 +29,7 @@ const HomeView = {
 
     // Get current playlist videos
     const currentPlaylist = settings.currentPlaylist || 'Virgin Voyages June 2026';
-    const currentPlaylistVideos = items.filter(v => (v.playlist || '').trim() === currentPlaylist);
+    const currentPlaylistVideos = safeItems.filter(v => (v.playlist || '').trim() === currentPlaylist);
 
     const getPublishTime = (value) => {
       if (!value) return 0;
@@ -24,7 +39,7 @@ const HomeView = {
 
     // Build playlist cards from visible content first so hidden playlists and future-only playlists stay excluded.
     const allPlaylists = settings.playlists || {};
-    const visiblePlaylistEntries = items.reduce((entries, video) => {
+    const visiblePlaylistEntries = safeItems.reduce((entries, video) => {
       const name = (video.playlist || '').trim();
       if (!name) return entries;
 
@@ -41,7 +56,7 @@ const HomeView = {
       .map(([name, entry]) => {
         const newestVideo = entry.video;
         const playlistSettings = allPlaylists[name] || {};
-        const videoCount = items.filter(v => (v.playlist || '').trim() === name).length;
+        const videoCount = safeItems.filter(v => (v.playlist || '').trim() === name).length;
         const thumbnail = (playlistSettings.thumbnail || newestVideo?.thumbnail || '').trim()
           || `https://i.ytimg.com/vi/${newestVideo?.youtubeId}/hqdefault.jpg`;
         return { name, thumbnail, publishDate: entry.publishTime, videoCount };
@@ -50,7 +65,7 @@ const HomeView = {
 
     // Get unique cruise lines (brands)
     const cruiseLines = {};
-    items.forEach(v => {
+    safeItems.forEach(v => {
       if (v.brand) {
         const key = v.brand.toLowerCase().replace(/\s+/g, '-');
         if (!cruiseLines[key]) {
@@ -69,7 +84,7 @@ const HomeView = {
 
     // Get unique theme parks (parkName is array)
     const themeparks = {};
-    items.forEach(v => {
+    safeItems.forEach(v => {
       if (v.parkName && Array.isArray(v.parkName)) {
         v.parkName.forEach(park => {
           const key = park.toLowerCase().replace(/\s+/g, '-');
@@ -182,7 +197,7 @@ const HomeView = {
     playlistCards.forEach(card => {
       card.addEventListener('click', async () => {
         const playlistName = card.getAttribute('data-playlist-name');
-        const playlistVideos = items.filter(v => (v.playlist || '').trim() === playlistName);
+        const playlistVideos = safeItems.filter(v => (v.playlist || '').trim() === playlistName);
         const detailDiv = document.getElementById('playlist-detail');
         
         if (detailDiv.classList.contains('active') && detailDiv.getAttribute('data-playlist') === playlistName) {

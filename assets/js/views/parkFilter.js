@@ -1,7 +1,6 @@
 const ParkFilterView = {
   async render(parkName) {
-    const items = await API.getContent();
-    const settings = await API.getSettings();
+    const [items, settings] = await Promise.all([API.getContent(), API.getSettings()]);
     VideoCard.logoMap = settings.logos || {};
 
     // Decode the park name from URL (replace hyphens with spaces) and capitalize
