@@ -71,12 +71,24 @@ def slugify(value):
     return cleaned or 'video'
 
 
+def slugify_underscore(value):
+    value = str(value or '').strip().lower()
+    cleaned = ''.join(ch if ch.isalnum() else '_' for ch in value)
+    cleaned = cleaned.strip('_')
+    return cleaned or 'video'
+
+
 def sort_items(items):
     return sorted(items, key=lambda item: get_publish_time(item.get('published')) or 0, reverse=True)
 
 
 def build_slug_from_payload(payload, fallback_title=''):
     playlist = (payload.get('playlist') or '').strip()
+    if playlist.lower() == 'ride pov':
+        title = (payload.get('title') or fallback_title or '').strip()
+        title_slug = slugify_underscore(title)
+        return f"{title_slug}_ride_pov" if title_slug else 'ride_pov'
+
     episode = str(payload.get('episode') or '').strip()
     parts = []
     if playlist:
@@ -86,6 +98,24 @@ def build_slug_from_payload(payload, fallback_title=''):
     if parts:
         return '-'.join(parts)
     return 'video'
+
+
+def ensure_unique_ride_pov_slug(items, base_slug, current_video_id=None):
+    base = str(base_slug or '').strip().lower() or 'ride_pov'
+    existing_slugs = {
+        str(item.get('slug') or '').strip().lower()
+        for item in items
+        if str(item.get('slug') or '').strip()
+        and (current_video_id is None or item.get('id') != current_video_id)
+    }
+
+    if base not in existing_slugs:
+        return base
+
+    suffix = 2
+    while f"{base}_{suffix}" in existing_slugs:
+        suffix += 1
+    return f"{base}_{suffix}"
 
 
 def normalize_list_value(value):
@@ -268,6 +298,11 @@ class AdminHandler(BaseHTTPRequestHandler):
             if type_values is None:
                 type_values = normalize_list_value(existing.get('type')) or []
 
+            playlist_value = (payload.get('playlist') or existing.get('playlist') or '').strip()
+            episode_value = (payload.get('episode') or existing.get('episode') or '').strip()
+            if playlist_value.lower() == 'ride pov':
+                episode_value = ''
+
             hotel_brand_values = normalize_list_value(payload.get('hotelBrand'))
             if hotel_brand_values is None:
                 hotel_brand_values = normalize_list_value(existing.get('hotelBrand')) or []
@@ -288,15 +323,19 @@ class AdminHandler(BaseHTTPRequestHandler):
             if park_name_values is None:
                 park_name_values = normalize_list_value(existing.get('parkName')) or []
 
+            next_slug = slug_value or build_slug_from_payload({**existing, **payload})
+            if playlist_value.lower() == 'ride pov':
+                next_slug = ensure_unique_ride_pov_slug(items, next_slug, current_video_id=existing.get('id'))
+
             items[index] = {
                 **existing,
                 'title': title,
-                'slug': slug_value or build_slug_from_payload({**existing, **payload}),
+                'slug': next_slug,
                 'youtubeId': youtube_id,
                 'published': payload.get('published') or existing.get('published') or __import__('datetime').datetime.utcnow().strftime('%Y-%m-%d'),
                 'featured': bool(payload.get('featured')),
-                'playlist': (payload.get('playlist') or existing.get('playlist') or '').strip(),
-                'episode': (payload.get('episode') or existing.get('episode') or '').strip(),
+                'playlist': playlist_value,
+                'episode': episode_value,
                 'summary': (payload.get('summary') or existing.get('summary') or '').strip(),
                 'thumbnail': (payload.get('thumbnail') or existing.get('thumbnail') or '').strip(),
                 'type': type_values,
@@ -320,17 +359,25 @@ class AdminHandler(BaseHTTPRequestHandler):
         brand_value = normalize_text_value(payload.get('brand')) or ''
         ship_name_value = normalize_text_value(payload.get('shipName')) or ''
         park_name_values = normalize_list_value(payload.get('parkName')) or []
+        playlist_value = (payload.get('playlist') or '').strip()
+        episode_value = (payload.get('episode') or '').strip()
+        if playlist_value.lower() == 'ride pov':
+            episode_value = ''
+
+        next_slug = slug_value or build_slug_from_payload(payload)
+        if playlist_value.lower() == 'ride pov':
+            next_slug = ensure_unique_ride_pov_slug(items, next_slug)
 
         video = {
             'id': int(__import__('time').time() * 1000),
             'contentType': 'video',
             'title': title,
-            'slug': slug_value or build_slug_from_payload(payload),
+            'slug': next_slug,
             'youtubeId': youtube_id,
             'published': payload.get('published') or __import__('datetime').datetime.utcnow().strftime('%Y-%m-%d'),
             'featured': bool(payload.get('featured')),
-            'playlist': (payload.get('playlist') or '').strip(),
-            'episode': (payload.get('episode') or '').strip(),
+            'playlist': playlist_value,
+            'episode': episode_value,
             'summary': (payload.get('summary') or '').strip(),
             'thumbnail': (payload.get('thumbnail') or '').strip(),
             'type': type_values,
@@ -425,38 +472,27 @@ class AdminHandler(BaseHTTPRequestHandler):
             return
 
         cache = read_stats_cache()
-        stats = {}
-        missing = []
-        for video_id in ids:
-            if video_id in cache:
-                stats[video_id] = cache[video_id]
-            else:
-                missing.append(video_id)
+        stats = {video_id: cache.get(video_id, {'viewCount': None, 'commentCount': None, 'likeCount': None}) for video_id in ids}
 
-        if missing:
-            api_key = read_settings().get('youtubeApiKey', '').strip() or os.environ.get('YOUTUBE_API_KEY', '').strip()
-            if not api_key:
-                for video_id in missing:
-                    stats[video_id] = {'viewCount': None, 'commentCount': None, 'likeCount': None}
+        api_key = read_settings().get('youtubeApiKey', '').strip() or os.environ.get('YOUTUBE_API_KEY', '').strip()
+        if api_key:
+            try:
+                url = 'https://www.googleapis.com/youtube/v3/videos?part=statistics&id=' + ','.join(ids) + '&key=' + api_key
+                context = ssl._create_unverified_context()
+                with urllib.request.urlopen(url, timeout=20, context=context) as response:
+                    payload = json.load(response)
+            except Exception:
+                pass
             else:
-                try:
-                    url = 'https://www.googleapis.com/youtube/v3/videos?part=statistics&id=' + ','.join(missing) + '&key=' + api_key
-                    context = ssl._create_unverified_context()
-                    with urllib.request.urlopen(url, timeout=20, context=context) as response:
-                        payload = json.load(response)
-                except Exception:
-                    for video_id in missing:
-                        stats[video_id] = {'viewCount': None, 'commentCount': None, 'likeCount': None}
-                else:
-                    for item in payload.get('items', []):
-                        snippet = item.get('statistics', {})
-                        record = {
-                            'viewCount': int(snippet.get('viewCount', 0) or 0),
-                            'commentCount': int(snippet.get('commentCount', 0) or 0),
-                            'likeCount': int(snippet.get('likeCount', 0) or 0),
-                        }
-                        stats[item.get('id')] = record
-                        cache[item.get('id')] = record
+                for item in payload.get('items', []):
+                    snippet = item.get('statistics', {})
+                    record = {
+                        'viewCount': int(snippet.get('viewCount', 0) or 0),
+                        'commentCount': int(snippet.get('commentCount', 0) or 0),
+                        'likeCount': int(snippet.get('likeCount', 0) or 0),
+                    }
+                    stats[item.get('id')] = record
+                    cache[item.get('id')] = record
 
         write_stats_cache(cache)
         self.send_json(200, {'stats': stats})

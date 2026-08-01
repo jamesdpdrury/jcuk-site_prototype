@@ -76,7 +76,9 @@ exports.handler = async (event, context) => {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
-        'Cache-Control': 'max-age=3600' // Cache for 1 hour
+        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0, s-maxage=0',
+        'Pragma': 'no-cache',
+        'Expires': '0'
       },
       body: JSON.stringify({ stats })
     };
@@ -84,7 +86,12 @@ exports.handler = async (event, context) => {
     console.error('Error fetching YouTube stats:', error);
     return {
       statusCode: 500,
-      headers: { 'Access-Control-Allow-Origin': '*' },
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0, s-maxage=0',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      },
       body: JSON.stringify({ error: 'Failed to fetch stats', stats: {} })
     };
   }
@@ -107,7 +114,10 @@ function getFallbackStats(videoIds) {
       statusCode: 200,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': '*',
+        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0, s-maxage=0',
+        'Pragma': 'no-cache',
+        'Expires': '0'
       },
       body: JSON.stringify({ stats })
     };
@@ -115,7 +125,12 @@ function getFallbackStats(videoIds) {
     console.error('Failed to read cache file:', e);
     return {
       statusCode: 500,
-      headers: { 'Access-Control-Allow-Origin': '*' },
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0, s-maxage=0',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      },
       body: JSON.stringify({ error: 'Failed to fetch stats', stats: {} })
     };
   }

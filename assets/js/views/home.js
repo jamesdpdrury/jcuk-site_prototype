@@ -1,6 +1,10 @@
 
 const HomeView = {
   async render() {
+    const ridePovPlaylistName = 'Ride POV';
+    const ridePovNormalized = ridePovPlaylistName.toLowerCase();
+    const ridePovPageSize = 6;
+
     const [items, settings] = await Promise.all([
       API.getContent(),
       API.getSettings()
@@ -37,6 +41,67 @@ const HomeView = {
       return Number.isNaN(parsed.getTime()) ? 0 : parsed.getTime();
     };
 
+    const normalizeList = (value) => {
+      if (Array.isArray(value)) return value.map(item => String(item || '').trim()).filter(Boolean);
+      if (typeof value === 'string') return value.split(',').map(item => item.trim()).filter(Boolean);
+      return [];
+    };
+
+    const isRidePovVideo = (video) => {
+      const playlistName = String(video?.playlist || '').trim().toLowerCase();
+      if (playlistName === ridePovNormalized) return true;
+      const tags = normalizeList(video?.tags).map(tag => tag.toLowerCase());
+      return tags.includes(ridePovNormalized);
+    };
+
+    const ridePovVideos = safeItems
+      .filter(isRidePovVideo)
+      .sort((a, b) => {
+        const dateDiff = getPublishTime(b?.published) - getPublishTime(a?.published);
+        if (dateDiff !== 0) return dateDiff;
+        const titleA = String(a?.title || '').trim();
+        const titleB = String(b?.title || '').trim();
+        return titleA.localeCompare(titleB);
+      });
+
+    const renderRidePovCard = (video) => {
+      const slug = (video.slug || '').trim();
+      const thumb = (video.thumbnail && video.thumbnail.trim())
+        ? video.thumbnail
+        : `https://i.ytimg.com/vi/${video.youtubeId}/hqdefault.jpg`;
+
+      const parkLogos = Array.isArray(video.parkName)
+        ? [...new Set(video.parkName)]
+            .map((park) => {
+              const logo = settings.logos?.parkName?.[park];
+              if (!logo) return '';
+              return `<img src="${logo}" alt="${escapeHtml(park)}" class="card-logo">`;
+            })
+            .filter(Boolean)
+            .join('')
+        : '';
+
+      return `
+        <article class="card ride-pov-card">
+          <a href="/v/${slug}" data-link style="display: block; text-decoration: none;">
+            <img
+              src="${thumb}"
+              alt="${escapeHtml(video.title || 'Ride POV video')}"
+              loading="lazy"
+              style="display: block; width: 100%; height: auto; cursor: pointer; border-radius: 10px 10px 0 0;"
+              onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${video.youtubeId}/mqdefault.jpg';">
+          </a>
+          <div class="card-body">
+            <div class="ride-pov-meta-row">
+              ${parkLogos ? `<div class="card-logos ride-pov-logos">${parkLogos}</div>` : '<div class="ride-pov-logos-empty"></div>'}
+              <div class="card-stats" data-video-id="${video.youtubeId || ''}">Loading stats…</div>
+              <a class="btn" href="/v/${slug}" data-link>WATCH</a>
+            </div>
+          </div>
+        </article>
+      `;
+    };
+
     // Build playlist cards from visible content first so hidden playlists and future-only playlists stay excluded.
     const allPlaylists = settings.playlists || {};
     const visiblePlaylistEntries = safeItems.reduce((entries, video) => {
@@ -52,7 +117,14 @@ const HomeView = {
     }, {});
 
     const otherPlaylists = Object.entries(visiblePlaylistEntries)
-      .filter(([name]) => name !== currentPlaylist && allPlaylists[name]?.show !== false)
+      .filter(([name]) => {
+        const normalizedName = String(name || '').trim().toLowerCase();
+        return (
+          name !== currentPlaylist
+          && normalizedName !== ridePovNormalized
+          && allPlaylists[name]?.show !== false
+        );
+      })
       .map(([name, entry]) => {
         const newestVideo = entry.video;
         const playlistSettings = allPlaylists[name] || {};
@@ -130,6 +202,19 @@ const HomeView = {
       </section>
     ` : '';
 
+    // Build Ride POV videos section (excluded from Other Playlists cards)
+    const ridePovHTML = `
+      <section class="playlists-section ride-pov-section">
+        <h2>Ride POVs</h2>
+        ${ridePovVideos.length > 0 ? `
+          <div id="ride-pov-grid" class="grid"></div>
+          <div class="ride-pov-actions">
+            <button id="ride-pov-show-more" class="btn ride-pov-show-more" type="button">Show more</button>
+          </div>
+        ` : '<p class="hint">No Ride POV videos yet.</p>'}
+      </section>
+    `;
+
     // Build cruise lines grid
     const cruiseLinesHTML = sortedCruiseLines.length > 0 ? `
       <section class="filters-section">
@@ -187,6 +272,7 @@ const HomeView = {
 
         ${currentPlaylistHTML}
         ${otherPlaylistsHTML}
+        ${ridePovHTML}
         ${cruiseLinesHTML}
         ${theparksHTML}
       </main>
@@ -230,6 +316,32 @@ const HomeView = {
         });
       });
     });
+
+    const ridePovGrid = document.getElementById('ride-pov-grid');
+    const ridePovShowMoreButton = document.getElementById('ride-pov-show-more');
+    if (ridePovGrid && ridePovShowMoreButton) {
+      let visibleRidePovCount = ridePovPageSize;
+
+      const renderRidePovChunk = () => {
+        const visibleItems = ridePovVideos.slice(0, visibleRidePovCount);
+        ridePovGrid.innerHTML = visibleItems.map(v => renderRidePovCard(v)).join('');
+
+        if (visibleRidePovCount >= ridePovVideos.length) {
+          ridePovShowMoreButton.style.display = 'none';
+        } else {
+          ridePovShowMoreButton.style.display = '';
+        }
+
+        VideoCard.hydrateStats();
+      };
+
+      ridePovShowMoreButton.addEventListener('click', () => {
+        visibleRidePovCount += ridePovPageSize;
+        renderRidePovChunk();
+      });
+
+      renderRidePovChunk();
+    }
     
     VideoCard.hydrateStats();
   }

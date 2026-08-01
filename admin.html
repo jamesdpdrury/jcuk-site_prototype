@@ -838,6 +838,7 @@
     let settingsData = {};
     let slugIsManual = false;
     let lastSavedVideoId = null;
+    const PERSISTENT_PLAYLISTS = ['Ride POV'];
 
     function escapeHtml(value) {
       return String(value || '')
@@ -853,6 +854,35 @@
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '');
+    }
+
+    function slugifyWithUnderscore(value) {
+      return String(value || '')
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '_')
+        .replace(/(^_|_$)/g, '');
+    }
+
+    function buildUniqueRidePovSlug(baseSlug) {
+      const normalizedBase = String(baseSlug || 'ride_pov').trim().toLowerCase() || 'ride_pov';
+      const editingId = String(editingIdInput.value || '').trim();
+      const existingSlugs = new Set(
+        videos
+          .filter(video => String(video?.id || '') !== editingId)
+          .map(video => String(video?.slug || '').trim().toLowerCase())
+          .filter(Boolean)
+      );
+
+      if (!existingSlugs.has(normalizedBase)) return normalizedBase;
+
+      let suffix = 2;
+      let candidate = `${normalizedBase}_${suffix}`;
+      while (existingSlugs.has(candidate)) {
+        suffix += 1;
+        candidate = `${normalizedBase}_${suffix}`;
+      }
+      return candidate;
     }
 
     function getPublishDeadline(video) {
@@ -908,6 +938,16 @@
           });
         }
       });
+
+      const configuredPlaylists = settingsData?.playlists && typeof settingsData.playlists === 'object'
+        ? Object.keys(settingsData.playlists)
+        : [];
+      [...configuredPlaylists, ...PERSISTENT_PLAYLISTS].forEach(name => {
+        const cleanName = String(name || '').trim();
+        if (!cleanName || grouped.has(cleanName)) return;
+        grouped.set(cleanName, { name: cleanName, latestPublishedTime: -1 });
+      });
+
       return Array.from(grouped.values())
         .sort((a, b) => {
           if (b.latestPublishedTime !== a.latestPublishedTime) {
@@ -915,6 +955,24 @@
           }
           return a.name.localeCompare(b.name);
         });
+    }
+
+    async function ensurePersistentPlaylists() {
+      const currentPlaylists = (settingsData?.playlists && typeof settingsData.playlists === 'object')
+        ? { ...settingsData.playlists }
+        : {};
+
+      let hasChanges = false;
+      PERSISTENT_PLAYLISTS.forEach(name => {
+        if (!currentPlaylists[name]) {
+          currentPlaylists[name] = { show: true };
+          hasChanges = true;
+        }
+      });
+
+      if (!hasChanges) return;
+      settingsData = serializeSettings({ playlists: currentPlaylists });
+      await saveSettings(settingsData, 'Saving default playlists...');
     }
 
     function renderCurrentPlaylistOptions() {
@@ -1152,7 +1210,14 @@
     }
 
     function buildSlugFromForm() {
-      const playlist = slugify(getFieldValue('playlist'));
+      const playlistRaw = (getFieldValue('playlist') || '').trim();
+      if (playlistRaw.toLowerCase() === 'ride pov') {
+        const titleSlug = slugifyWithUnderscore(getFieldValue('title'));
+        const baseSlug = titleSlug ? titleSlug + '_ride_pov' : 'ride_pov';
+        return buildUniqueRidePovSlug(baseSlug);
+      }
+
+      const playlist = slugify(playlistRaw);
       const episode = slugify(getFieldValue('episode'));
       const parts = [];
       if (playlist) parts.push(playlist);
@@ -1356,6 +1421,7 @@
         const response = await fetch('/api/settings');
         const data = await response.json();
         settingsData = data && typeof data === 'object' ? data : {};
+        await ensurePersistentPlaylists();
         adminPasswordInput.value = settingsData.adminPassword || '';
         apiKeyInput.value = settingsData.youtubeApiKey || '';
         channelIdInput.value = settingsData.youtubeChannelId || '';
@@ -1449,7 +1515,7 @@
       slugIsManual = Boolean(slugInput.value.trim());
     });
 
-    ['playlist', 'episode'].forEach(name => {
+    ['title', 'playlist', 'episode'].forEach(name => {
       const field = form.querySelector('[name="' + name + '"]');
       field.addEventListener('input', syncSlugFromForm);
       field.addEventListener('change', syncSlugFromForm);
@@ -1588,6 +1654,10 @@
       payload.brand = hasCruise ? (cruiseLineInput.value || '').trim() : '';
       payload.shipName = hasCruise ? (shipNameInput.value || '').trim() : '';
       payload.slug = (slugInput.value || '').trim();
+
+      if (String(payload.playlist || '').trim().toLowerCase() === 'ride pov') {
+        payload.episode = '';
+      }
 
       status.className = 'status';
       status.textContent = 'Saving...';
