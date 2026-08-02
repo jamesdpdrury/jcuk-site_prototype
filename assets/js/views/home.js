@@ -2,8 +2,10 @@
 const HomeView = {
   async render() {
     const ridePovPlaylistName = 'Ride POV';
+    const fireworksShowsPlaylistName = 'Fireworks and Shows';
     const ridePovNormalized = ridePovPlaylistName.toLowerCase();
-    const ridePovPageSize = 6;
+    const fireworksShowsNormalized = fireworksShowsPlaylistName.toLowerCase();
+    const specialPlaylistPageSize = 6;
 
     const [items, settings] = await Promise.all([
       API.getContent(),
@@ -54,17 +56,26 @@ const HomeView = {
       return tags.includes(ridePovNormalized);
     };
 
-    const ridePovVideos = safeItems
-      .filter(isRidePovVideo)
-      .sort((a, b) => {
-        const dateDiff = getPublishTime(b?.published) - getPublishTime(a?.published);
-        if (dateDiff !== 0) return dateDiff;
-        const titleA = String(a?.title || '').trim();
-        const titleB = String(b?.title || '').trim();
-        return titleA.localeCompare(titleB);
-      });
+    const isFireworksShowsVideo = (video) => {
+      const playlistName = String(video?.playlist || '').trim().toLowerCase();
+      if (playlistName === fireworksShowsNormalized) return true;
+      const tags = normalizeList(video?.tags).map(tag => tag.toLowerCase());
+      return tags.includes(fireworksShowsNormalized);
+    };
 
-    const renderRidePovCard = (video) => {
+    const sortSpecialPlaylistVideos = (videos) => videos.sort((a, b) => {
+      const dateDiff = getPublishTime(b?.published) - getPublishTime(a?.published);
+      if (dateDiff !== 0) return dateDiff;
+      const titleA = String(a?.title || '').trim();
+      const titleB = String(b?.title || '').trim();
+      return titleA.localeCompare(titleB);
+    });
+
+    const ridePovVideos = sortSpecialPlaylistVideos(safeItems.filter(isRidePovVideo));
+    const fireworksShowsVideos = sortSpecialPlaylistVideos(safeItems.filter(isFireworksShowsVideo));
+
+    const renderSpecialPlaylistCard = (video, fallbackAltText, options = {}) => {
+      const { includeCruiseLogo = false } = options;
       const slug = (video.slug || '').trim();
       const thumb = (video.thumbnail && video.thumbnail.trim())
         ? video.thumbnail
@@ -81,19 +92,25 @@ const HomeView = {
             .join('')
         : '';
 
+      const cruiseLogo = includeCruiseLogo
+        ? (settings.logos?.brand?.[video.brand] || '')
+        : '';
+
+      const combinedLogos = `${cruiseLogo ? `<img src="${cruiseLogo}" alt="${escapeHtml(video.brand || 'Cruise line')}" class="card-logo">` : ''}${parkLogos}`;
+
       return `
         <article class="card ride-pov-card">
           <a href="/v/${slug}" data-link style="display: block; text-decoration: none;">
             <img
               src="${thumb}"
-              alt="${escapeHtml(video.title || 'Ride POV video')}"
+              alt="${escapeHtml(video.title || fallbackAltText)}"
               loading="lazy"
               style="display: block; width: 100%; height: auto; cursor: pointer; border-radius: 10px 10px 0 0;"
               onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${video.youtubeId}/mqdefault.jpg';">
           </a>
           <div class="card-body">
             <div class="ride-pov-meta-row">
-              ${parkLogos ? `<div class="card-logos ride-pov-logos">${parkLogos}</div>` : '<div class="ride-pov-logos-empty"></div>'}
+              ${combinedLogos ? `<div class="card-logos ride-pov-logos">${combinedLogos}</div>` : '<div class="ride-pov-logos-empty"></div>'}
               <div class="card-stats" data-video-id="${video.youtubeId || ''}">Loading stats…</div>
               <a class="btn" href="/v/${slug}" data-link>WATCH</a>
             </div>
@@ -122,6 +139,7 @@ const HomeView = {
         return (
           name !== currentPlaylist
           && normalizedName !== ridePovNormalized
+          && normalizedName !== fireworksShowsNormalized
           && allPlaylists[name]?.show !== false
         );
       })
@@ -215,6 +233,18 @@ const HomeView = {
       </section>
     `;
 
+    const fireworksShowsHTML = `
+      <section class="playlists-section ride-pov-section fireworks-shows-section">
+        <h2>Fireworks and Shows</h2>
+        ${fireworksShowsVideos.length > 0 ? `
+          <div id="fireworks-shows-grid" class="grid"></div>
+          <div class="ride-pov-actions">
+            <button id="fireworks-shows-show-more" class="btn ride-pov-show-more" type="button">Show more</button>
+          </div>
+        ` : '<p class="hint">No Fireworks and Shows videos yet.</p>'}
+      </section>
+    `;
+
     // Build cruise lines grid
     const cruiseLinesHTML = sortedCruiseLines.length > 0 ? `
       <section class="filters-section">
@@ -273,6 +303,7 @@ const HomeView = {
         ${currentPlaylistHTML}
         ${otherPlaylistsHTML}
         ${ridePovHTML}
+        ${fireworksShowsHTML}
         ${cruiseLinesHTML}
         ${theparksHTML}
       </main>
@@ -317,31 +348,36 @@ const HomeView = {
       });
     });
 
-    const ridePovGrid = document.getElementById('ride-pov-grid');
-    const ridePovShowMoreButton = document.getElementById('ride-pov-show-more');
-    if (ridePovGrid && ridePovShowMoreButton) {
-      let visibleRidePovCount = ridePovPageSize;
+    const initSpecialPlaylistSection = (gridId, buttonId, sourceVideos, fallbackAltText, options = {}) => {
+      const grid = document.getElementById(gridId);
+      const showMoreButton = document.getElementById(buttonId);
+      if (!grid || !showMoreButton) return;
 
-      const renderRidePovChunk = () => {
-        const visibleItems = ridePovVideos.slice(0, visibleRidePovCount);
-        ridePovGrid.innerHTML = visibleItems.map(v => renderRidePovCard(v)).join('');
+      let visibleCount = specialPlaylistPageSize;
 
-        if (visibleRidePovCount >= ridePovVideos.length) {
-          ridePovShowMoreButton.style.display = 'none';
+      const renderChunk = () => {
+        const visibleItems = sourceVideos.slice(0, visibleCount);
+        grid.innerHTML = visibleItems.map(v => renderSpecialPlaylistCard(v, fallbackAltText, options)).join('');
+
+        if (visibleCount >= sourceVideos.length) {
+          showMoreButton.style.display = 'none';
         } else {
-          ridePovShowMoreButton.style.display = '';
+          showMoreButton.style.display = '';
         }
 
         VideoCard.hydrateStats();
       };
 
-      ridePovShowMoreButton.addEventListener('click', () => {
-        visibleRidePovCount += ridePovPageSize;
-        renderRidePovChunk();
+      showMoreButton.addEventListener('click', () => {
+        visibleCount += specialPlaylistPageSize;
+        renderChunk();
       });
 
-      renderRidePovChunk();
-    }
+      renderChunk();
+    };
+
+    initSpecialPlaylistSection('ride-pov-grid', 'ride-pov-show-more', ridePovVideos, 'Ride POV video');
+    initSpecialPlaylistSection('fireworks-shows-grid', 'fireworks-shows-show-more', fireworksShowsVideos, 'Fireworks and Shows video', { includeCruiseLogo: true });
     
     VideoCard.hydrateStats();
   }

@@ -838,7 +838,11 @@
     let settingsData = {};
     let slugIsManual = false;
     let lastSavedVideoId = null;
-    const PERSISTENT_PLAYLISTS = ['Ride POV'];
+    const PERSISTENT_PLAYLISTS = ['Ride POV', 'Fireworks and Shows'];
+    const SPECIAL_PLAYLISTS = {
+      'ride pov': { suffix: '_ride_pov', fallback: 'ride_pov' },
+      'fireworks and shows': { suffix: '_fs', fallback: 'fireworks_and_shows_fs' }
+    };
 
     function escapeHtml(value) {
       return String(value || '')
@@ -864,8 +868,8 @@
         .replace(/(^_|_$)/g, '');
     }
 
-    function buildUniqueRidePovSlug(baseSlug) {
-      const normalizedBase = String(baseSlug || 'ride_pov').trim().toLowerCase() || 'ride_pov';
+    function buildUniqueSpecialSlug(baseSlug, fallbackSlug) {
+      const normalizedBase = String(baseSlug || fallbackSlug || 'video').trim().toLowerCase() || String(fallbackSlug || 'video').trim().toLowerCase();
       const editingId = String(editingIdInput.value || '').trim();
       const existingSlugs = new Set(
         videos
@@ -1211,10 +1215,11 @@
 
     function buildSlugFromForm() {
       const playlistRaw = (getFieldValue('playlist') || '').trim();
-      if (playlistRaw.toLowerCase() === 'ride pov') {
+      const specialConfig = SPECIAL_PLAYLISTS[playlistRaw.toLowerCase()];
+      if (specialConfig) {
         const titleSlug = slugifyWithUnderscore(getFieldValue('title'));
-        const baseSlug = titleSlug ? titleSlug + '_ride_pov' : 'ride_pov';
-        return buildUniqueRidePovSlug(baseSlug);
+        const baseSlug = titleSlug ? titleSlug + specialConfig.suffix : specialConfig.fallback;
+        return buildUniqueSpecialSlug(baseSlug, specialConfig.fallback);
       }
 
       const playlist = slugify(playlistRaw);
@@ -1655,7 +1660,7 @@
       payload.shipName = hasCruise ? (shipNameInput.value || '').trim() : '';
       payload.slug = (slugInput.value || '').trim();
 
-      if (String(payload.playlist || '').trim().toLowerCase() === 'ride pov') {
+      if (SPECIAL_PLAYLISTS[String(payload.playlist || '').trim().toLowerCase()]) {
         payload.episode = '';
       }
 

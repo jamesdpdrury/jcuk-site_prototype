@@ -4,7 +4,9 @@ const Header=()=>`
   <div class="header-container">
     <div class="header-left">
       <div class="header-profile">
-        <img id="channel-profile" src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=" alt="Channel" class="profile-image is-loading" decoding="async">
+        <a href="/" data-link aria-label="Go to home page">
+          <img id="channel-profile" src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=" alt="Channel" class="profile-image is-loading" decoding="async">
+        </a>
       </div>
       <div class="header-branding">
         <h1 class="header-title">JAMES & CHRIS UK</h1>

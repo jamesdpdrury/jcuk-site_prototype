@@ -82,12 +82,19 @@ def sort_items(items):
     return sorted(items, key=lambda item: get_publish_time(item.get('published')) or 0, reverse=True)
 
 
+SPECIAL_SLUG_PLAYLISTS = {
+    'ride pov': {'suffix': '_ride_pov', 'fallback': 'ride_pov'},
+    'fireworks and shows': {'suffix': '_fs', 'fallback': 'fireworks_and_shows_fs'},
+}
+
+
 def build_slug_from_payload(payload, fallback_title=''):
     playlist = (payload.get('playlist') or '').strip()
-    if playlist.lower() == 'ride pov':
+    special_slug_config = SPECIAL_SLUG_PLAYLISTS.get(playlist.lower())
+    if special_slug_config:
         title = (payload.get('title') or fallback_title or '').strip()
         title_slug = slugify_underscore(title)
-        return f"{title_slug}_ride_pov" if title_slug else 'ride_pov'
+        return f"{title_slug}{special_slug_config['suffix']}" if title_slug else special_slug_config['fallback']
 
     episode = str(payload.get('episode') or '').strip()
     parts = []
@@ -100,8 +107,8 @@ def build_slug_from_payload(payload, fallback_title=''):
     return 'video'
 
 
-def ensure_unique_ride_pov_slug(items, base_slug, current_video_id=None):
-    base = str(base_slug or '').strip().lower() or 'ride_pov'
+def ensure_unique_special_slug(items, base_slug, fallback_slug='video', current_video_id=None):
+    base = str(base_slug or '').strip().lower() or str(fallback_slug or 'video').strip().lower() or 'video'
     existing_slugs = {
         str(item.get('slug') or '').strip().lower()
         for item in items
@@ -300,7 +307,7 @@ class AdminHandler(BaseHTTPRequestHandler):
 
             playlist_value = (payload.get('playlist') or existing.get('playlist') or '').strip()
             episode_value = (payload.get('episode') or existing.get('episode') or '').strip()
-            if playlist_value.lower() == 'ride pov':
+            if playlist_value.lower() in SPECIAL_SLUG_PLAYLISTS:
                 episode_value = ''
 
             hotel_brand_values = normalize_list_value(payload.get('hotelBrand'))
@@ -324,8 +331,9 @@ class AdminHandler(BaseHTTPRequestHandler):
                 park_name_values = normalize_list_value(existing.get('parkName')) or []
 
             next_slug = slug_value or build_slug_from_payload({**existing, **payload})
-            if playlist_value.lower() == 'ride pov':
-                next_slug = ensure_unique_ride_pov_slug(items, next_slug, current_video_id=existing.get('id'))
+            if playlist_value.lower() in SPECIAL_SLUG_PLAYLISTS:
+                fallback_slug = SPECIAL_SLUG_PLAYLISTS[playlist_value.lower()]['fallback']
+                next_slug = ensure_unique_special_slug(items, next_slug, fallback_slug=fallback_slug, current_video_id=existing.get('id'))
 
             items[index] = {
                 **existing,
@@ -361,12 +369,13 @@ class AdminHandler(BaseHTTPRequestHandler):
         park_name_values = normalize_list_value(payload.get('parkName')) or []
         playlist_value = (payload.get('playlist') or '').strip()
         episode_value = (payload.get('episode') or '').strip()
-        if playlist_value.lower() == 'ride pov':
+        if playlist_value.lower() in SPECIAL_SLUG_PLAYLISTS:
             episode_value = ''
 
         next_slug = slug_value or build_slug_from_payload(payload)
-        if playlist_value.lower() == 'ride pov':
-            next_slug = ensure_unique_ride_pov_slug(items, next_slug)
+        if playlist_value.lower() in SPECIAL_SLUG_PLAYLISTS:
+            fallback_slug = SPECIAL_SLUG_PLAYLISTS[playlist_value.lower()]['fallback']
+            next_slug = ensure_unique_special_slug(items, next_slug, fallback_slug=fallback_slug)
 
         video = {
             'id': int(__import__('time').time() * 1000),
