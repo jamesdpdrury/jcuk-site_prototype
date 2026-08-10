@@ -49,6 +49,12 @@ const HomeView = {
       return [];
     };
 
+    const slugifyPlaylist = (value) => String(value || '')
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+
     const isRidePovVideo = (video) => {
       const playlistName = String(video?.playlist || '').trim().toLowerCase();
       if (playlistName === ridePovNormalized) return true;
@@ -325,10 +331,14 @@ const HomeView = {
         }
         
         // Show playlist videos
+        const playlistSlug = slugifyPlaylist(playlistName);
         detailDiv.innerHTML = `
           <div class="playlist-detail-header">
             <h3>${playlistName}</h3>
-            <button class="btn-close-playlist">Close Playlist</button>
+            <div class="playlist-detail-actions">
+              <a class="btn" href="/p/${encodeURIComponent(playlistSlug)}" data-link>WATCH PLAYLIST</a>
+              <button class="btn-close-playlist">Close Playlist</button>
+            </div>
           </div>
           <div class="grid">
             ${playlistVideos.map(v => VideoCard.render(v)).join('')}

@@ -1,6 +1,15 @@
 
 const app=document.getElementById('app');
 const Router={
+ normalizeSlug(raw){
+  if(!raw) return '';
+  const cleaned=String(raw).replace(/^\/+|\/+$/g,'');
+  try{
+   return decodeURIComponent(cleaned);
+  }catch(_error){
+   return cleaned;
+  }
+ },
  renderLoadingShell(){
     app.innerHTML=`
      ${Header()}
@@ -71,6 +80,16 @@ const Router={
      }
      if(p.startsWith('/video/')){
         await DeepLinkView.render(p.slice(7));
+        Router.populateHeaderInfo();
+        return;
+     }
+     if(p.startsWith('/p/')){
+        await PlaylistDeepLinkView.render(Router.normalizeSlug(p.slice(3)));
+        Router.populateHeaderInfo();
+        return;
+     }
+     if(p.startsWith('/playlist/')){
+        await PlaylistDeepLinkView.render(Router.normalizeSlug(p.slice(10)));
         Router.populateHeaderInfo();
         return;
      }

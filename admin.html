@@ -1179,6 +1179,26 @@
       await saveSettings(settingsData, 'Playlist visibility updated.');
     }
 
+    async function updatePlaylistYoutubeId(playlistName, youtubePlaylistId) {
+      const nextPlaylists = { ...(settingsData?.playlists || {}) };
+      if (!nextPlaylists[playlistName]) {
+        nextPlaylists[playlistName] = {};
+      }
+      const trimmed = String(youtubePlaylistId || '').trim();
+      if (trimmed) {
+        nextPlaylists[playlistName].youtubePlaylistId = trimmed;
+      } else {
+        delete nextPlaylists[playlistName].youtubePlaylistId;
+      }
+      settingsData = serializeSettings({ playlists: nextPlaylists });
+      await saveSettings(settingsData, trimmed ? 'Playlist ID saved.' : 'Playlist ID removed.');
+    }
+
+    function getPlaylistDeepLinkUrl(playlistName) {
+      const routeSlug = slugify(playlistName || 'playlist');
+      return window.location.origin + '/p/' + encodeURIComponent(routeSlug);
+    }
+
     function populateDatalist(datalist, values) {
       if (!datalist) return;
       datalist.innerHTML = values.map(value => '<option value="' + escapeHtml(value) + '"></option>').join('');
@@ -1305,6 +1325,7 @@
         const playlistData = playlists[playlist] || {};
         const thumbnail = playlistData?.thumbnail || '';
         const isShown = playlistData?.show !== false;  // Default to true if not set
+        const youtubePlaylistId = (playlistData?.youtubePlaylistId || '').trim();
         
         const cards = list.map(video => {
           const thumb = (video.thumbnail || '').trim() || 'https://i.ytimg.com/vi/' + video.youtubeId + '/hqdefault.jpg';
@@ -1341,6 +1362,9 @@
               '<input type="checkbox" data-playlist-show="' + escapeHtml(playlist) + '" ' + (isShown ? 'checked' : '') + ' style="cursor: pointer;">' +
               'Show Playlist' +
             '</label>' +
+            '<input type="text" value="' + escapeHtml(youtubePlaylistId) + '" data-playlist-id-input="' + escapeHtml(playlist) + '" placeholder="YouTube playlist ID (list=...)" style="width: 220px; padding: 6px 8px; font-size: 0.8rem;">' +
+            '<button type="button" class="ghost" data-playlist-id-save="' + escapeHtml(playlist) + '" style="padding: 6px 10px; font-size: 0.8rem;">Save ID</button>' +
+            '<button type="button" class="ghost" data-playlist-copy-url="' + escapeHtml(playlist) + '" style="padding: 6px 10px; font-size: 0.8rem;">Copy URL</button>' +
             '<input type="file" accept=".png,.jpg,.jpeg,.svg,.webp,image/png,image/jpeg,image/svg+xml,image/webp" data-playlist-upload="' + escapeHtml(playlist) + '" style="width: 150px; padding: 6px 8px; font-size: 0.8rem;">' +
             '<button type="button" class="ghost" data-playlist-thumb-remove="' + escapeHtml(playlist) + '" ' + (thumbnail ? '' : 'disabled') + ' style="padding: 6px 10px; font-size: 0.8rem;">Remove</button>' +
           '</div>' +
@@ -1400,6 +1424,53 @@
         button.addEventListener('click', async (e) => {
           const playlistName = e.target.getAttribute('data-playlist-thumb-remove');
           await updatePlaylistThumbnail(playlistName, '');
+        });
+      });
+
+      // Playlist ID save buttons
+      videoList.querySelectorAll('button[data-playlist-id-save]').forEach(button => {
+        button.addEventListener('click', async (e) => {
+          const playlistName = e.target.getAttribute('data-playlist-id-save');
+          const controls = e.target.closest('summary');
+          const input = controls ? controls.querySelector('input[data-playlist-id-input]') : null;
+          if (!input) return;
+          try {
+            await updatePlaylistYoutubeId(playlistName, input.value);
+            settingsStatus.className = 'status success';
+            settingsStatus.textContent = 'Playlist ID saved for ' + playlistName + '.';
+          } catch (error) {
+            settingsStatus.className = 'status error';
+            settingsStatus.textContent = error.message;
+          }
+        });
+      });
+
+      // Playlist deep-link copy buttons
+      videoList.querySelectorAll('button[data-playlist-copy-url]').forEach(button => {
+        button.addEventListener('click', async (e) => {
+          const playlistName = e.target.getAttribute('data-playlist-copy-url');
+          const url = getPlaylistDeepLinkUrl(playlistName);
+          try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              await navigator.clipboard.writeText(url);
+            } else {
+              const textArea = document.createElement('textarea');
+              textArea.value = url;
+              textArea.style.position = 'fixed';
+              textArea.style.left = '-999999px';
+              document.body.appendChild(textArea);
+              textArea.focus();
+              textArea.select();
+              const successful = document.execCommand('copy');
+              document.body.removeChild(textArea);
+              if (!successful) throw new Error('Copy failed');
+            }
+            status.className = 'status success';
+            status.textContent = 'Playlist URL copied: ' + url;
+          } catch (_error) {
+            status.className = 'status error';
+            status.textContent = 'Could not copy playlist URL to clipboard.';
+          }
         });
       });
     }

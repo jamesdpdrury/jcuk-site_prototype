@@ -65,13 +65,22 @@ const VideoCard={
   if(!ids.length) return;
   try{
    const base=API._getApiBase();
-     const refreshToken=Date.now();
-     const response=await fetch(
-      `${base}/youtube-stats?videoId=${encodeURIComponent(ids.join(','))}&t=${refreshToken}`,
-      { cache:'no-store' }
-     );
-   const data=await response.json();
-   const stats=data.stats||{};
+   const refreshToken=Date.now();
+   const chunks=[];
+   for(let i=0;i<ids.length;i+=50){
+    chunks.push(ids.slice(i,i+50));
+   }
+
+   const stats={};
+   for(const chunk of chunks){
+    const response=await fetch(
+     `${base}/youtube-stats?videoId=${encodeURIComponent(chunk.join(','))}&t=${refreshToken}`,
+     { cache:'no-store' }
+    );
+    const data=await response.json();
+    Object.assign(stats,data.stats||{});
+   }
+
    document.querySelectorAll('.card-stats[data-video-id]').forEach(node=>{
     const videoId=node.getAttribute('data-video-id');
     const info=stats[videoId]||{};
