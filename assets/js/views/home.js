@@ -1,8 +1,10 @@
 
 const HomeView = {
   async render() {
+    const specialOneOffsPlaylistName = "Special One Off's";
     const ridePovPlaylistName = 'Ride POV';
     const fireworksShowsPlaylistName = 'Fireworks and Shows';
+    const specialOneOffsNormalized = specialOneOffsPlaylistName.toLowerCase();
     const ridePovNormalized = ridePovPlaylistName.toLowerCase();
     const fireworksShowsNormalized = fireworksShowsPlaylistName.toLowerCase();
     const specialPlaylistPageSize = 6;
@@ -62,6 +64,13 @@ const HomeView = {
       return tags.includes(ridePovNormalized);
     };
 
+    const isSpecialOneOffVideo = (video) => {
+      const playlistName = String(video?.playlist || '').trim().toLowerCase();
+      if (playlistName === specialOneOffsNormalized) return true;
+      const tags = normalizeList(video?.tags).map(tag => tag.toLowerCase());
+      return tags.includes(specialOneOffsNormalized);
+    };
+
     const isFireworksShowsVideo = (video) => {
       const playlistName = String(video?.playlist || '').trim().toLowerCase();
       if (playlistName === fireworksShowsNormalized) return true;
@@ -77,6 +86,7 @@ const HomeView = {
       return titleA.localeCompare(titleB);
     });
 
+    const specialOneOffVideos = sortSpecialPlaylistVideos(safeItems.filter(isSpecialOneOffVideo));
     const ridePovVideos = sortSpecialPlaylistVideos(safeItems.filter(isRidePovVideo));
     const fireworksShowsVideos = sortSpecialPlaylistVideos(safeItems.filter(isFireworksShowsVideo));
 
@@ -144,6 +154,7 @@ const HomeView = {
         const normalizedName = String(name || '').trim().toLowerCase();
         return (
           name !== currentPlaylist
+          && normalizedName !== specialOneOffsNormalized
           && normalizedName !== ridePovNormalized
           && normalizedName !== fireworksShowsNormalized
           && allPlaylists[name]?.show !== false
@@ -239,6 +250,18 @@ const HomeView = {
       </section>
     `;
 
+    const specialOneOffsHTML = `
+      <section class="playlists-section ride-pov-section special-one-offs-section">
+        <h2>Special One Off's</h2>
+        ${specialOneOffVideos.length > 0 ? `
+          <div id="special-one-offs-grid" class="grid"></div>
+          <div class="ride-pov-actions">
+            <button id="special-one-offs-show-more" class="btn ride-pov-show-more" type="button">Show more</button>
+          </div>
+        ` : '<p class="hint">No Special One Off\'s videos yet.</p>'}
+      </section>
+    `;
+
     const fireworksShowsHTML = `
       <section class="playlists-section ride-pov-section fireworks-shows-section">
         <h2>Fireworks and Shows</h2>
@@ -308,6 +331,7 @@ const HomeView = {
 
         ${currentPlaylistHTML}
         ${otherPlaylistsHTML}
+        ${specialOneOffsHTML}
         ${ridePovHTML}
         ${fireworksShowsHTML}
         ${cruiseLinesHTML}
@@ -317,18 +341,35 @@ const HomeView = {
     
     // Add playlist click handlers
     const playlistCards = app.querySelectorAll('.playlist-card');
+    const getHeaderOffset = () => {
+      const header = document.querySelector('.main-header');
+      if (header && header.offsetHeight) return header.offsetHeight;
+      return window.innerWidth <= 768 ? 215 : 162;
+    };
+
     playlistCards.forEach(card => {
       card.addEventListener('click', async () => {
         const playlistName = card.getAttribute('data-playlist-name');
         const playlistVideos = safeItems.filter(v => (v.playlist || '').trim() === playlistName);
         const detailDiv = document.getElementById('playlist-detail');
+        const restoreScrollTop = () => {
+          const savedTop = Number(detailDiv.dataset.restoreScroll || '0');
+          if (Number.isFinite(savedTop)) {
+            window.scrollTo({ top: Math.max(0, savedTop), behavior: 'smooth' });
+            delete detailDiv.dataset.restoreScroll;
+          }
+        };
         
         if (detailDiv.classList.contains('active') && detailDiv.getAttribute('data-playlist') === playlistName) {
           // Close if already open
           detailDiv.classList.remove('active');
           detailDiv.innerHTML = '';
+          restoreScrollTop();
           return;
         }
+
+        const headerOffset = getHeaderOffset();
+        detailDiv.dataset.restoreScroll = String(Math.max(0, window.scrollY + card.getBoundingClientRect().top - headerOffset));
         
         // Show playlist videos
         const playlistSlug = slugifyPlaylist(playlistName);
@@ -347,6 +388,11 @@ const HomeView = {
         detailDiv.setAttribute('data-playlist', playlistName);
         detailDiv.classList.add('active');
         VideoCard.hydrateStats();
+
+        requestAnimationFrame(() => {
+          const scrollTarget = detailDiv.getBoundingClientRect().top + window.scrollY - headerOffset;
+          window.scrollTo({ top: Math.max(0, scrollTarget), behavior: 'smooth' });
+        });
         
         // Close button handler
         const closeBtn = detailDiv.querySelector('.btn-close-playlist');
@@ -354,6 +400,7 @@ const HomeView = {
           e.stopPropagation();
           detailDiv.classList.remove('active');
           detailDiv.innerHTML = '';
+          restoreScrollTop();
         });
       });
     });
@@ -386,6 +433,7 @@ const HomeView = {
       renderChunk();
     };
 
+    initSpecialPlaylistSection('special-one-offs-grid', 'special-one-offs-show-more', specialOneOffVideos, 'Special One Off video');
     initSpecialPlaylistSection('ride-pov-grid', 'ride-pov-show-more', ridePovVideos, 'Ride POV video');
     initSpecialPlaylistSection('fireworks-shows-grid', 'fireworks-shows-show-more', fireworksShowsVideos, 'Fireworks and Shows video', { includeCruiseLogo: true });
     

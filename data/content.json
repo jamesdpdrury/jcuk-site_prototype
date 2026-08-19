@@ -1,5 +1,329 @@
 [
   {
+    "id": 1787145313051,
+    "contentType": "video",
+    "title": "Europa-Park",
+    "slug": "europa_park_special_one_off",
+    "youtubeId": "pqoXQp38UWY",
+    "published": "2026-08-26",
+    "featured": true,
+    "playlist": "Special One Off's",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Theme Park"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Europa-Park"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
+    "id": 1787145028378,
+    "contentType": "video",
+    "title": "Matterhorn Blitz",
+    "slug": "matterhorn_blitz_ride_pov",
+    "youtubeId": "smFoobjDHpk",
+    "published": "2026-08-26",
+    "featured": false,
+    "playlist": "Ride POV",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Theme Park",
+      "Ride POV"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Europa-Park"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
+    "id": 1787144982698,
+    "contentType": "video",
+    "title": "Pirates of Batavia",
+    "slug": "pirates_of_batavia_ride_pov",
+    "youtubeId": "kqoiD9w0Vsk",
+    "published": "2026-08-26",
+    "featured": false,
+    "playlist": "Ride POV",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Theme Park",
+      "Ride POV"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Europa-Park"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
+    "id": 1787144943693,
+    "contentType": "video",
+    "title": "Atlantis Adventure",
+    "slug": "atlantis_adventure_ride_pov",
+    "youtubeId": "hQIlbnDyHGs",
+    "published": "2026-08-26",
+    "featured": false,
+    "playlist": "Ride POV",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Ride POV",
+      "Theme Park"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Europa-Park"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
+    "id": 1787144903872,
+    "contentType": "video",
+    "title": "Piccolo Mondo",
+    "slug": "piccolo_mondo_ride_pov",
+    "youtubeId": "h6LMwgdXNhc",
+    "published": "2026-08-26",
+    "featured": false,
+    "playlist": "Ride POV",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Theme Park",
+      "Ride POV"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Europa-Park"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
+    "id": 1787144864580,
+    "contentType": "video",
+    "title": "Swiss Bob Run",
+    "slug": "swiss_bob_run_ride_pov",
+    "youtubeId": "gs2QpouZ8Q0",
+    "published": "2026-08-26",
+    "featured": false,
+    "playlist": "Ride POV",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Ride POV",
+      "Theme Park"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Europa-Park"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
+    "id": 1787144822946,
+    "contentType": "video",
+    "title": "Atlantica SuperSplash",
+    "slug": "atlantica_supersplash_ride_pov",
+    "youtubeId": "aKIF0tbI6Tk",
+    "published": "2026-08-26",
+    "featured": false,
+    "playlist": "Ride POV",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Ride POV",
+      "Theme Park"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Europa-Park"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
+    "id": 1787144756255,
+    "contentType": "video",
+    "title": "Silver Star",
+    "slug": "silver_star_ride_pov",
+    "youtubeId": "TqiQd5eX2ro",
+    "published": "2026-08-26",
+    "featured": false,
+    "playlist": "Ride POV",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Ride POV",
+      "Theme Park"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Europa-Park"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
+    "id": 1787144712125,
+    "contentType": "video",
+    "title": "WODAN Timburcoaster",
+    "slug": "wodan_timburcoaster_ride_pov",
+    "youtubeId": "Oj2hzguUFjU",
+    "published": "2026-08-26",
+    "featured": false,
+    "playlist": "Ride POV",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Theme Park",
+      "Ride POV"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Europa-Park"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
+    "id": 1787144502148,
+    "contentType": "video",
+    "title": "Pegasus",
+    "slug": "pegasus_ride_pov",
+    "youtubeId": "NaFStLhurck",
+    "published": "2026-08-26",
+    "featured": false,
+    "playlist": "Ride POV",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Ride POV",
+      "Theme Park"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Europa-Park"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [
+      "Europa-Park"
+    ],
+    "tags": []
+  },
+  {
+    "id": 1787143203367,
+    "contentType": "video",
+    "title": "Poseidon",
+    "slug": "poseidon_ride_pov",
+    "youtubeId": "4rpoHKgKG6s",
+    "published": "2026-08-26",
+    "featured": false,
+    "playlist": "Ride POV",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Ride POV",
+      "Theme Park"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Europa-Park"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [
+      "Europa-Park"
+    ],
+    "tags": []
+  },
+  {
+    "id": 1786987812666,
+    "contentType": "video",
+    "title": "WE BOARD THE WORLD'S NEWEST & LARGEST CRUISE SHIP! \ud83d\udea2",
+    "slug": "legend-of-the-seas-july-2026-part-2",
+    "youtubeId": "VosiAUiq-xU",
+    "published": "2026-08-23",
+    "featured": true,
+    "playlist": "Legend of the Seas July 2026",
+    "episode": "2",
+    "summary": "\ud83d\udea2 WE'RE ON BOARD LEGEND OF THE SEAS! \ud83d\udea2\n\nThe moment we've been waiting for has finally arrived!\n\nAfter two days exploring Rome, it's time to leave Italy's capital behind and head to Civitavecchia to board Royal Caribbean's Legend of the Seas \u2014 the newest and largest cruise ship in the world!\n\nThis is our first ever cruise with Royal Caribbean, so absolutely everything is new to us as we step on board for the very first time.\n\nWe start the day by leaving our CitizenM hotel in Rome and making our way to the train station, where we have a little wait before catching the train to Civitavecchia. From the station, we board a bus to the cruise terminal, which is incredibly impressive, before breezing through passport control, security and check-in.\n\nAnd then... WE BOARD LEGEND OF THE SEAS! \ud83d\udea2\ud83d\udd25\n\nStepping into the Royal Promenade for the first time is quite an experience, and we spend the afternoon exploring this incredible new ship, including a first look around the AquaDome Market and a visit to our cabin on Deck 10, right at the front of the ship.\n\nAfter lunch in the Windjammer, we head back out to explore even more of the ship before getting ready for our first evening on board.\n\nOur first dinner in the Main Dining Room brings some seriously good steaks, followed by a look around the Royal Caribbean shop as we hunt for some exclusive inaugural merchandise.\n\nWe also explore the running track, before heading to the Royal Theatre to watch Machine de Cirque.\n\nAnd then it's time for our first big night onboard...\n\n\ud83c\udf88 THE MIDNIGHT BALLOON DROP! \ud83c\udf88\n\nWe join the party in the Royal Promenade as the ship celebrates into the night.\n\nThis is just the beginning of our Legend of the Seas adventure \u2014 and next week we're heading to NAPLES! \ud83c\uddee\ud83c\uddf9\n\n\ud83d\udea2 WANT TO EXPLORE LEGEND OF THE SEAS WITH US?\n\nWe've also made a Deck By Deck Guide to Legend of the Seas, taking you through the ship from top to bottom and showing you everything we found along the way.",
+    "thumbnail": "",
+    "type": [
+      "Cruise"
+    ],
+    "brand": "Royal Caribbean",
+    "shipName": "Legend of the Seas",
+    "parkName": [],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
     "id": 1786308816711,
     "contentType": "video",
     "title": "ROME Before the World's NEWEST Cruise Ship! \ud83c\uddee\ud83c\uddf9",
@@ -1711,7 +2035,7 @@
     "id": 1784532354812,
     "contentType": "video",
     "title": "Our BIGGEST Summer Yet\u2026 Cruises, Disney & Theme Parks! \u2600\ufe0f\u2708\ufe0f",
-    "slug": "summer-2026",
+    "slug": "our_biggest_summer_yet_cruises_disney_theme_parks_special_one_off",
     "youtubeId": "OK66BZYs-F4",
     "published": "2026-06-28",
     "featured": false,
@@ -1739,11 +2063,12 @@
       "Disney World",
       "Universal Studios"
     ],
-    "playlist": "Summer 2026",
+    "playlist": "Special One Off's",
     "episode": "",
     "shipName": "",
     "parkName": [],
-    "hotelBrand": []
+    "hotelBrand": [],
+    "travelBrand": []
   },
   {
     "id": 1,

@@ -648,6 +648,7 @@
 
           <label>Published date
             <input name="published" type="date">
+            <small class="field-note">Video goes live at 00:01 UTC on this date. If it is still the same UTC date, the site checks YouTube before showing it.</small>
           </label>
 
           <label>Slug
@@ -838,8 +839,9 @@
     let settingsData = {};
     let slugIsManual = false;
     let lastSavedVideoId = null;
-    const PERSISTENT_PLAYLISTS = ['Ride POV', 'Fireworks and Shows'];
+    const PERSISTENT_PLAYLISTS = ["Special One Off's", 'Ride POV', 'Fireworks and Shows'];
     const SPECIAL_PLAYLISTS = {
+      "special one off's": { suffix: '_special_one_off', fallback: 'special_one_off' },
       'ride pov': { suffix: '_ride_pov', fallback: 'ride_pov' },
       'fireworks and shows': { suffix: '_fs', fallback: 'fireworks_and_shows_fs' }
     };

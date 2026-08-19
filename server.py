@@ -3,7 +3,7 @@ import os
 import ssl
 import urllib.request
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, quote, urlparse
 from datetime import datetime, timezone
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -83,6 +83,7 @@ def sort_items(items):
 
 
 SPECIAL_SLUG_PLAYLISTS = {
+    "special one off's": {'suffix': '_special_one_off', 'fallback': 'special_one_off'},
     'ride pov': {'suffix': '_ride_pov', 'fallback': 'ride_pov'},
     'fireworks and shows': {'suffix': '_fs', 'fallback': 'fireworks_and_shows_fs'},
 }
@@ -150,16 +151,47 @@ def get_publish_time(value):
         return None
     if isinstance(value, (int, float)):
         return int(value)
+    text = str(value).strip()
     try:
-        parsed = datetime.fromisoformat(str(value))
+        parsed = datetime.fromisoformat(text.replace('Z', '+00:00'))
     except ValueError:
         try:
-            parsed = datetime.strptime(str(value), '%Y-%m-%d')
+            parsed = datetime.strptime(text, '%Y-%m-%d')
         except ValueError:
             return None
     if parsed.tzinfo is None:
         parsed = parsed.replace(tzinfo=timezone.utc)
+    else:
+        parsed = parsed.astimezone(timezone.utc)
+    if len(text) == 10 and text[4] == '-' and text[7] == '-':
+        parsed = parsed.replace(hour=0, minute=1, second=0, microsecond=0)
     return int(parsed.timestamp() * 1000)
+
+
+def is_youtube_public(video):
+    youtube_id = str(video.get('youtubeId') or '').strip()
+    if not youtube_id:
+        return True
+
+    api_key = read_settings().get('youtubeApiKey', '').strip() or os.environ.get('YOUTUBE_API_KEY', '').strip()
+    if not api_key:
+        return False
+
+    url = 'https://www.googleapis.com/youtube/v3/videos?part=status&id=' + quote(youtube_id) + '&key=' + quote(api_key)
+    request = urllib.request.Request(url, headers={'Accept': 'application/json'})
+
+    try:
+        with urllib.request.urlopen(request, timeout=15, context=ssl._create_unverified_context()) as response:
+            payload = json.load(response)
+    except Exception:
+        return False
+
+    items = payload.get('items') or []
+    if not items:
+        return False
+
+    privacy_status = str((items[0].get('status') or {}).get('privacyStatus') or '').lower()
+    return privacy_status == 'public'
 
 
 def is_publicly_visible(video):
@@ -169,8 +201,18 @@ def is_publicly_visible(video):
     publish_time = get_publish_time(published)
     if publish_time is None:
         return True
+
     now = int(datetime.now(timezone.utc).timestamp() * 1000)
-    return now >= publish_time + (11 * 60 * 60 * 1000)
+    if publish_time > now:
+        return False
+
+    publish_date = datetime.fromtimestamp(publish_time / 1000, tz=timezone.utc).date()
+    today_date = datetime.now(timezone.utc).date()
+    if publish_date < today_date:
+        return True
+    if publish_date == today_date:
+        return is_youtube_public(video)
+    return True
 
 
 def normalize_video_id(value):
