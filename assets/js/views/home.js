@@ -325,8 +325,7 @@ const HomeView = {
             <div class="featured-sticker">Featured Video</div>
           </div>
           <h1>${featured.title}</h1>
-          <p>${featured.summary || ""}</p>
-          <a class="btn" href="/v/${featuredSlug}" data-link>WATCH</a>
+          <a class="btn" href="/v/${featuredSlug}" data-link>BE THE FIRST TO WATCH</a>
         </section>
 
         ${currentPlaylistHTML}

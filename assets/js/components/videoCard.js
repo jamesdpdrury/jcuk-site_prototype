@@ -63,6 +63,7 @@ const VideoCard={
     .map(node=>node.getAttribute('data-video-id'))
     .filter(Boolean))];
   if(!ids.length) return;
+    const requestedIds=new Set(ids);
   try{
    const base=API._getApiBase();
    const refreshToken=Date.now();
@@ -83,6 +84,7 @@ const VideoCard={
 
    document.querySelectorAll('.card-stats[data-video-id]').forEach(node=>{
     const videoId=node.getAttribute('data-video-id');
+    if(!requestedIds.has(videoId)) return;
     const info=stats[videoId]||{};
     const views=info.viewCount!=null?new Intl.NumberFormat().format(info.viewCount):'—';
     const comments=info.commentCount!=null?new Intl.NumberFormat().format(info.commentCount):'—';
@@ -90,6 +92,7 @@ const VideoCard={
    });
   }catch(error){
    document.querySelectorAll('.card-stats[data-video-id]').forEach(node=>{
+    if(!requestedIds.has(node.getAttribute('data-video-id'))) return;
     node.innerHTML='<span class="stat-pill">Stats unavailable</span>';
    });
   }
