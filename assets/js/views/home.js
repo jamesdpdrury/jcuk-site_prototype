@@ -36,7 +36,7 @@ const HomeView = {
     const featuredSlug = (featured.slug || '').trim();
 
     // Get current playlist videos
-    const currentPlaylist = settings.currentPlaylist || 'Virgin Voyages June 2026';
+    const currentPlaylist = settings.currentPlaylist || 'Legend of the Seas July 2026';
     const currentPlaylistVideos = safeItems.filter(v => (v.playlist || '').trim() === currentPlaylist);
 
     const getPublishTime = (value) => {

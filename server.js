@@ -4,6 +4,7 @@ const path = require('path');
 
 const rootDir = __dirname;
 const dataFilePath = path.join(rootDir, 'data', 'content.json');
+const settingsFilePath = path.join(rootDir, 'data', 'settings.json');
 const mimeTypes = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
@@ -131,6 +132,11 @@ const server = http.createServer(async (req, res) => {
       }
       return;
     }
+  }
+
+  if (pathname === '/api/settings') {
+    sendJson(res, 200, readJsonFile(settingsFilePath));
+    return;
   }
 
   if (pathname === '/data/content.json') {
