@@ -839,6 +839,7 @@
     let settingsData = {};
     let slugIsManual = false;
     let lastSavedVideoId = null;
+    const pendingPlaylistThumbnails = {};
     const PERSISTENT_PLAYLISTS = ["Special One Off's", 'Ride POV', 'Fireworks and Shows'];
     const SPECIAL_PLAYLISTS = {
       "special one off's": { suffix: '_special_one_off', fallback: 'special_one_off' },
@@ -1301,6 +1302,12 @@
       openVideoModal();
     }
 
+    function thumbnailFilenameLabel(thumbnail) {
+      if (!thumbnail) return 'No thumbnail uploaded yet';
+      const name = thumbnail.split('/').pop().split('?')[0];
+      return 'Current: ' + (name || 'thumbnail saved');
+    }
+
     function formatVideoLabel(video, compact = false) {
       const playlist = (video.playlist || '').trim();
       const episode = (video.episode != null && video.episode !== '') ? 'Part ' + video.episode : '';
@@ -1367,8 +1374,12 @@
             '<input type="text" value="' + escapeHtml(youtubePlaylistId) + '" data-playlist-id-input="' + escapeHtml(playlist) + '" placeholder="YouTube playlist ID (list=...)" style="width: 220px; padding: 6px 8px; font-size: 0.8rem;">' +
             '<button type="button" class="ghost" data-playlist-id-save="' + escapeHtml(playlist) + '" style="padding: 6px 10px; font-size: 0.8rem;">Save ID</button>' +
             '<button type="button" class="ghost" data-playlist-copy-url="' + escapeHtml(playlist) + '" style="padding: 6px 10px; font-size: 0.8rem;">Copy URL</button>' +
+            '<span class="playlist-thumb-controls" style="display: flex; align-items: center; gap: 6px;">' +
             '<input type="file" accept=".png,.jpg,.jpeg,.svg,.webp,image/png,image/jpeg,image/svg+xml,image/webp" data-playlist-upload="' + escapeHtml(playlist) + '" style="width: 150px; padding: 6px 8px; font-size: 0.8rem;">' +
+            '<span class="field-note" data-playlist-thumb-status="' + escapeHtml(playlist) + '" style="font-size: 0.75rem;">' + escapeHtml(thumbnailFilenameLabel(thumbnail)) + '</span>' +
+            '<button type="button" data-playlist-thumb-save="' + escapeHtml(playlist) + '" style="padding: 6px 10px; font-size: 0.8rem;" disabled>Save</button>' +
             '<button type="button" class="ghost" data-playlist-thumb-remove="' + escapeHtml(playlist) + '" ' + (thumbnail ? '' : 'disabled') + ' style="padding: 6px 10px; font-size: 0.8rem;">Remove</button>' +
+            '</span>' +
           '</div>' +
           '<span class="arrow">▼</span>' +
           '</summary><div class="playlist-videos">' + cards + '</div></details>';
@@ -1398,10 +1409,13 @@
         });
       });
       
-      // Playlist thumbnail uploads
+      // Playlist thumbnail uploads (staged locally until Save is clicked)
       videoList.querySelectorAll('input[data-playlist-upload]').forEach(input => {
         input.addEventListener('change', async (e) => {
           const file = e.target.files?.[0];
+          const playlistName = e.target.getAttribute('data-playlist-upload');
+          const status = videoList.querySelector('[data-playlist-thumb-status="' + CSS.escape(playlistName) + '"]');
+          const saveButton = videoList.querySelector('button[data-playlist-thumb-save="' + CSS.escape(playlistName) + '"]');
           if (!file) return;
           if (!file.type.startsWith('image/')) {
             settingsStatus.className = 'status error';
@@ -1409,22 +1423,34 @@
             e.target.value = '';
             return;
           }
-          const playlistName = e.target.getAttribute('data-playlist-upload');
           try {
-            const dataUrl = await readFileAsDataUrl(file);
-            await updatePlaylistThumbnail(playlistName, dataUrl);
-            e.target.value = '';
+            pendingPlaylistThumbnails[playlistName] = await readFileAsDataUrl(file);
+            if (status) status.textContent = 'Selected: ' + file.name + ' (not saved yet)';
+            if (saveButton) saveButton.disabled = false;
           } catch (error) {
             settingsStatus.className = 'status error';
             settingsStatus.textContent = error.message;
           }
         });
       });
-      
+
+      // Playlist thumbnail save buttons
+      videoList.querySelectorAll('button[data-playlist-thumb-save]').forEach(button => {
+        button.addEventListener('click', async (e) => {
+          const playlistName = e.target.getAttribute('data-playlist-thumb-save');
+          const dataUrl = pendingPlaylistThumbnails[playlistName];
+          if (!dataUrl) return;
+          e.target.disabled = true;
+          await updatePlaylistThumbnail(playlistName, dataUrl);
+          delete pendingPlaylistThumbnails[playlistName];
+        });
+      });
+
       // Playlist thumbnail remove buttons
       videoList.querySelectorAll('button[data-playlist-thumb-remove]').forEach(button => {
         button.addEventListener('click', async (e) => {
           const playlistName = e.target.getAttribute('data-playlist-thumb-remove');
+          delete pendingPlaylistThumbnails[playlistName];
           await updatePlaylistThumbnail(playlistName, '');
         });
       });
