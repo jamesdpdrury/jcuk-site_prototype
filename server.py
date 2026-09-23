@@ -1,5 +1,7 @@
+import base64
 import json
 import os
+import re
 import ssl
 import urllib.request
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -10,6 +12,15 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 DATA_FILE = os.path.join(ROOT, 'data', 'content.json')
 SETTINGS_FILE = os.path.join(ROOT, 'data', 'settings.json')
 STATS_CACHE_FILE = os.path.join(ROOT, 'data', 'youtube-stats-cache.json')
+UPLOADS_DIR = os.path.join(ROOT, 'assets', 'uploads')
+
+DATA_URL_RE = re.compile(r'^data:([\w.+-]+/[\w.+-]+);base64,(.*)$', re.DOTALL)
+EXT_BY_MIME = {
+    'image/png': '.png',
+    'image/jpeg': '.jpg',
+    'image/svg+xml': '.svg',
+    'image/webp': '.webp',
+}
 
 MIME_TYPES = {
     '.html': 'text/html; charset=utf-8',
@@ -76,6 +87,47 @@ def slugify_underscore(value):
     cleaned = ''.join(ch if ch.isalnum() else '_' for ch in value)
     cleaned = cleaned.strip('_')
     return cleaned or 'video'
+
+
+def save_data_url_to_file(data_url, subdir, basename):
+    """Decode a base64 data: URL to a static file and return its public URL path.
+
+    Storing images inline in settings.json makes the payload too large for the
+    Netlify function's response (AWS Lambda caps sync responses at 6MB), which
+    was why logos/thumbnails silently failed to load on the hosted site.
+    """
+    match = DATA_URL_RE.match(data_url)
+    if not match:
+        return data_url
+    mime, encoded = match.groups()
+    ext = EXT_BY_MIME.get(mime.lower(), '.png')
+    target_dir = os.path.join(UPLOADS_DIR, subdir)
+    os.makedirs(target_dir, exist_ok=True)
+    file_path = os.path.join(target_dir, f'{basename}{ext}')
+    with open(file_path, 'wb') as handle:
+        handle.write(base64.b64decode(encoded))
+    return f'/assets/uploads/{subdir}/{basename}{ext}'
+
+
+def convert_logo_uploads(logos):
+    for category, options in (logos or {}).items():
+        if not isinstance(options, dict):
+            continue
+        for option, value in list(options.items()):
+            if isinstance(value, str) and value.startswith('data:'):
+                basename = f'{slugify(category)}-{slugify(option)}'
+                options[option] = save_data_url_to_file(value, 'logos', basename)
+    return logos
+
+
+def convert_playlist_thumbnails(playlists):
+    for name, entry in (playlists or {}).items():
+        if not isinstance(entry, dict):
+            continue
+        thumbnail = entry.get('thumbnail')
+        if isinstance(thumbnail, str) and thumbnail.startswith('data:'):
+            entry['thumbnail'] = save_data_url_to_file(thumbnail, 'playlists', slugify(name))
+    return playlists
 
 
 def sort_items(items):
@@ -511,6 +563,10 @@ class AdminHandler(BaseHTTPRequestHandler):
             if key == 'youtubeApiKey':
                 continue
             settings[key] = value
+        if 'logos' in payload:
+            settings['logos'] = convert_logo_uploads(settings['logos'])
+        if 'playlists' in payload:
+            settings['playlists'] = convert_playlist_thumbnails(settings['playlists'])
         write_settings(settings)
         self.send_json(200, settings)
 
