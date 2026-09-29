@@ -1,5 +1,167 @@
 [
   {
+    "id": 1790703048865,
+    "contentType": "video",
+    "title": "Pinocchio\u2019s Daring Journey",
+    "slug": "pinocchio_s_daring_journey_ride_pov",
+    "youtubeId": "iBKwlRZ-5yM",
+    "published": "2026-09-30",
+    "featured": false,
+    "playlist": "Ride POV",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Theme Park",
+      "Ride POV"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Disneyland Paris"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
+    "id": 1790703012557,
+    "contentType": "video",
+    "title": "DISNEYLAND PARIS 2026!",
+    "slug": "disneyland_paris_2026_special_one_off",
+    "youtubeId": "Z4kZwYgcuxM",
+    "published": "2026-09-30",
+    "featured": true,
+    "playlist": "Special One Off's",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Theme Park"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Disney Adventure Park",
+      "Disneyland Paris"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
+    "id": 1790702947661,
+    "contentType": "video",
+    "title": "Phantom Manor",
+    "slug": "phantom_manor_ride_pov",
+    "youtubeId": "NGAjCoo1row",
+    "published": "2026-09-30",
+    "featured": false,
+    "playlist": "Ride POV",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Ride POV",
+      "Theme Park"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Disneyland Paris"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
+    "id": 1790702907903,
+    "contentType": "video",
+    "title": "Frozen Ever After",
+    "slug": "frozen_ever_after_ride_pov",
+    "youtubeId": "JPLrKyFeOLI",
+    "published": "2026-09-30",
+    "featured": false,
+    "playlist": "Ride POV",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Ride POV",
+      "Theme Park"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Disney Adventure Park"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
+    "id": 1790702864636,
+    "contentType": "video",
+    "title": "Disney Cascade of Lights",
+    "slug": "disney_cascade_of_lights_fs",
+    "youtubeId": "HeevXSytOJ8",
+    "published": "2026-09-30",
+    "featured": false,
+    "playlist": "Fireworks and Shows",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Fireworks",
+      "Theme Park"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Disney Adventure Park"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
+    "id": 1790702824204,
+    "contentType": "video",
+    "title": "Ratatouille: The Adventure",
+    "slug": "ratatouille_the_adventure_ride_pov",
+    "youtubeId": "1-RGE5x0Bek",
+    "published": "2026-09-30",
+    "featured": false,
+    "playlist": "Ride POV",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Ride POV",
+      "Theme Park"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Disney Adventure Park"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
     "id": 1790377303779,
     "contentType": "video",
     "title": "Magic Kingdom, Beak & Barrel & Hollywood Studios!",
