@@ -1,5 +1,147 @@
 [
   {
+    "id": 1792337742073,
+    "contentType": "video",
+    "title": "Under the Sea Journey of the Little Mermaid",
+    "slug": "under_the_sea_journey_of_the_little_mermaid_ride_pov",
+    "youtubeId": "1Qu7bYcNof0",
+    "published": "2026-10-21",
+    "featured": false,
+    "playlist": "Ride POV",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Ride POV",
+      "Theme Park"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Magic Kingdom Park"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
+    "id": 1792337697751,
+    "contentType": "video",
+    "title": "Disney's Hocus Pocus Spelltacular",
+    "slug": "disney_s_hocus_pocus_spelltacular_fs",
+    "youtubeId": "gD6f7QQ7UtE",
+    "published": "2026-10-20",
+    "featured": false,
+    "playlist": "Fireworks and Shows",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Halloween",
+      "Show",
+      "Theme Park"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Magic Kingdom Park",
+      "MNSSHP"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
+    "id": 1792337622418,
+    "contentType": "video",
+    "title": "Mickey's Boo-To-You Parade",
+    "slug": "mickey_s_boo_to_you_parade_fs",
+    "youtubeId": "90eVO44VPwk",
+    "published": "2026-10-19",
+    "featured": false,
+    "playlist": "Fireworks and Shows",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Halloween",
+      "Fireworks",
+      "Theme Park"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Magic Kingdom Park",
+      "MNSSHP"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
+    "id": 1792337560046,
+    "contentType": "video",
+    "title": "Disney\u2019s Not So Spooky Spectacular",
+    "slug": "disney_s_not_so_spooky_spectacular_fs",
+    "youtubeId": "FirA2O_hyl0",
+    "published": "2026-10-18",
+    "featured": false,
+    "playlist": "Fireworks and Shows",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Fireworks",
+      "Halloween",
+      "Theme Park"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "MNSSHP",
+      "Magic Kingdom Park"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
+    "id": 1792337462380,
+    "contentType": "video",
+    "title": "Mickey's Not-So-Scary Halloween Party",
+    "slug": "orlando-fall-2026-part-5",
+    "youtubeId": "7B8WBKN-2mw",
+    "published": "2026-10-18",
+    "featured": true,
+    "playlist": "Orlando Fall 2026",
+    "episode": "5",
+    "summary": "Catch every highlight from Mickey's Not-So-Scary Halloween Party 2026 with a front-row view of the park's spookiest entertainment.\n\nWe are taking you through a full evening at the park, starting with the vibrant colors of the Disney Halloween parade and the intricate details of the nighttime atmosphere. This footage captures the energy of the crowd and the special seasonal lighting that transforms the park after dark, making it feel like a completely new experience for any Disney fan.\n\nBeyond the parade, you will see our perspective on the popular Magic Kingdom attractions during the evening hours, followed by the stunning castle projection show that lights up the night. We also feature a journey through a dark, illuminated ride to showcase how the park celebrates the season. Whether you are prepping for your own autumn trip or just want to relive the festive fun, these nighttime spectaculars offer the perfect look at the holiday spirit.",
+    "thumbnail": "",
+    "type": [
+      "Halloween",
+      "Theme Park"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Magic Kingdom Park",
+      "MNSSHP"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
     "id": 1791612930155,
     "contentType": "video",
     "title": "The Seas with Nemo & Friends",
@@ -2518,7 +2660,8 @@
     "brand": "",
     "shipName": "",
     "parkName": [
-      "Magic Kingdom Park"
+      "Magic Kingdom Park",
+      "MNSSHP"
     ],
     "hotelBrand": [
       "Hyatt Regency"
