@@ -1,5 +1,116 @@
 [
   {
+    "id": 1792944925603,
+    "contentType": "video",
+    "title": "Disney Starlight",
+    "slug": "disney_starlight_fs",
+    "youtubeId": "IGf2hXPiLNA",
+    "published": "2026-10-27",
+    "featured": false,
+    "playlist": "Fireworks and Shows",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Show",
+      "Theme Park"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Magic Kingdom Park"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
+    "id": 1792944866818,
+    "contentType": "video",
+    "title": "Villains Unfairly Ever After",
+    "slug": "villains_unfairly_ever_after_fs",
+    "youtubeId": "ftCaSsfTt6w",
+    "published": "2026-10-27",
+    "featured": false,
+    "playlist": "Fireworks and Shows",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Show",
+      "Theme Park"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Hollywood Studios"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
+    "id": 1792944810724,
+    "contentType": "video",
+    "title": "Indiana Jones Epic Stunt Spectacular",
+    "slug": "indiana_jones_epic_stunt_spectacular_fs",
+    "youtubeId": "ULEu0rj8-64",
+    "published": "2026-10-26",
+    "featured": false,
+    "playlist": "Fireworks and Shows",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Theme Park",
+      "Show"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Hollywood Studios"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
+    "id": 1792944744261,
+    "contentType": "video",
+    "title": "GOODBYE DISNEY WORLD! \ud83c\udff0 Millennium Falcon Pilots & Our Riviera Resort Suite Tour",
+    "slug": "orlando-fall-2026-part-6",
+    "youtubeId": "ujjuwt5n_p8",
+    "published": "2026-10-25",
+    "featured": true,
+    "playlist": "Orlando Fall 2026",
+    "episode": "6",
+    "summary": "Experience the magic of a day out with this theme park vlog. See the illuminated decorations and ride highlights up close. \ud83c\udfa1\n\nJoin us for a tour through the park as we capture the sights and sounds of the day. From the bustling lines at the station to the glowing decorations lighting up the walkways, we are taking you right into the heart of the action.\n\nWhether you want to enjoy a relaxing amusement park ride in a gondola or see the wonders of an aquarium tour, this video covers it all. We have captured every detail so you can soak in the unique park atmosphere from your own screen.",
+    "thumbnail": "",
+    "type": [
+      "Theme Park"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Epcot",
+      "Hollywood Studios",
+      "Magic Kingdom Park"
+    ],
+    "hotelBrand": [
+      "Riviera"
+    ],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
     "id": 1792337742073,
     "contentType": "video",
     "title": "Under the Sea Journey of the Little Mermaid",
