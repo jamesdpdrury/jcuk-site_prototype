@@ -1,5 +1,62 @@
 [
   {
+    "id": 1793402101231,
+    "contentType": "video",
+    "title": "Stranger Things Return To Hawkins",
+    "slug": "stranger_things_return_to_hawkins_fs",
+    "youtubeId": "U2VAOVgwFk0",
+    "published": "2026-11-01",
+    "featured": false,
+    "playlist": "Fireworks and Shows",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Halloween",
+      "Show",
+      "Theme Park"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Halloween Horror Nights",
+      "Universal Studios Orlando"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
+    "id": 1793401966113,
+    "contentType": "video",
+    "title": "We Tried the RIP Tour at Halloween Horror Nights!",
+    "slug": "orlando-fall-2026-part-7",
+    "youtubeId": "0aK8DhPYAzQ",
+    "published": "2026-10-31",
+    "featured": true,
+    "playlist": "Orlando Fall 2026",
+    "episode": "7",
+    "summary": "It's time for HALLOWEEN HORROR NIGHTS! \ud83c\udf83\ud83d\udc7b And this time we're experiencing Universal Orlando's biggest Halloween event with the VIP treatment!\n\nWe're back at Halloween Horror Nights for another unforgettable night, and this time we're taking on the **RIP Tour**! It's our second time experiencing the tour, but Tiff is joining us for her very first RIP Tour (and her second ever Halloween Horror Nights!).\n\nBefore our tour even begins, we're making the most of our time in the park, squeezing in loads of rides and checking out all the Halloween Horror Nights merchandise. Then it's time to join our RIP Tour and experience the event with our guide, getting through the attractions and making sure we don't miss the big highlights.\n\nHalfway through the tour, we even get some time to explore the incredible Halloween Horror Nights food offerings and try some of the spooky treats available around the park!\n\nAnd of course, no Halloween Horror Nights visit would be complete without catching two fantastic entertainment experiences: the **Black Noir show** and the spectacular **Stranger Things: Return to Hawkins Lagoon Show**!\n\nWill Tiff love her first RIP Tour? Is the VIP experience worth it? And just how much can you fit into one night at Halloween Horror Nights?",
+    "thumbnail": "",
+    "type": [
+      "Halloween",
+      "Theme Park"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Universal Studios Orlando",
+      "Halloween Horror Nights"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
     "id": 1793207505525,
     "contentType": "video",
     "title": "Radiator Springs Racers - Night",
@@ -2641,7 +2698,8 @@
     "brand": "",
     "shipName": "",
     "parkName": [
-      "Universal Studios Orlando"
+      "Universal Studios Orlando",
+      "Halloween Horror Nights"
     ],
     "hotelBrand": [
       "Universal's Stella Nova Resort"
