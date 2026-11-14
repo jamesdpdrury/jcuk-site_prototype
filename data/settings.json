@@ -24,7 +24,9 @@
       "Disney Sequoia Lodge": "/assets/uploads/logos/hotelbrand-disney-sequoia-lodge.webp",
       "H10": "/assets/uploads/logos/hotelbrand-h10.png",
       "Sofitel": "/assets/uploads/logos/hotelbrand-sofitel.png",
-      "Riviera": "/assets/uploads/logos/hotelbrand-riviera.png"
+      "Riviera": "/assets/uploads/logos/hotelbrand-riviera.png",
+      "Courtyard By Marriott": "/assets/uploads/logos/hotelbrand-courtyard-by-marriott.webp",
+      "Disneyland Hotel": "/assets/uploads/logos/hotelbrand-disneyland-hotel.svg"
     },
     "parkName": {
       "Epic Universe": "/assets/uploads/logos/parkname-epic-universe.webp",
@@ -108,5 +110,5 @@
       "thumbnail": "/assets/uploads/playlists/los-angeles-august-2026.png"
     }
   },
-  "currentPlaylist": "Orlando Fall 2026"
+  "currentPlaylist": "Los Angeles August 2026"
 }
