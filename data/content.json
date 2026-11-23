@@ -1,5 +1,85 @@
 [
   {
+    "id": 1795456515110,
+    "contentType": "video",
+    "title": "Snow White\u2019s Enchanted Wish",
+    "slug": "snow_white_s_enchanted_wish_ride_pov",
+    "youtubeId": "_-8eRAr3czc",
+    "published": "2026-11-23",
+    "featured": false,
+    "playlist": "Ride POV",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Theme Park",
+      "Ride POV"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Disneyland Park"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
+    "id": 1795455204425,
+    "contentType": "video",
+    "title": "Fantasmic!",
+    "slug": "fantasmic_fs_2",
+    "youtubeId": "bMQicAyqo9k",
+    "published": "2026-11-23",
+    "featured": false,
+    "playlist": "Fireworks and Shows",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Fireworks",
+      "Theme Park"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Disneyland Park"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
+    "id": 1795455164148,
+    "contentType": "video",
+    "title": "Paint the Night Parade",
+    "slug": "paint_the_night_parade_fs",
+    "youtubeId": "AF7P0ZPLdkU",
+    "published": "2026-11-23",
+    "featured": false,
+    "playlist": "Fireworks and Shows",
+    "episode": "",
+    "summary": "",
+    "thumbnail": "",
+    "type": [
+      "Theme Park"
+    ],
+    "brand": "",
+    "shipName": "",
+    "parkName": [
+      "Disneyland Park"
+    ],
+    "hotelBrand": [],
+    "travelBrand": [],
+    "series": "",
+    "location": [],
+    "tags": []
+  },
+  {
     "id": 1795348837317,
     "contentType": "video",
     "title": "A HUGE Disneyland Park Day! Rides, Fantasmic & Paint the Night\u2019s Final Show",
